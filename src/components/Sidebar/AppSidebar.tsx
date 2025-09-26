@@ -9,7 +9,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ currentPage, onPageChang
   const menuItems = [
     { id: 'auctions', label: 'Auctions', icon: '🏷️' },
     { id: 'users', label: 'Users', icon: '👥' },
-    { id: 'leads-kanban', label: 'Leads & Sales', icon: '📊' },
   ];
 
   return (
