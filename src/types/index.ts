@@ -60,6 +60,3 @@ export interface DashboardStats {
   overduePayments: number;
   monthlyTarget: number;
 }
-
-// Re-export task-related types
-export type { Task, Ticket, TaskColumn } from './tasks';

@@ -57,7 +57,6 @@ import { MonthWeekDay } from './components/Calendar/MonthWeekDay';
 import { MyEvents } from './components/Calendar/MyEvents';
 import { TeamView } from './components/Calendar/TeamView';
 import { initializeSampleData } from './utils/storage';
-import { initializeTasksData } from './utils/tasksStorage';
 
 // Placeholder components for other pages
 const PlaceholderPage: React.FC<{ title: string; description: string }> = ({ title, description }) => (
@@ -80,7 +79,6 @@ function App() {
   useEffect(() => {
     // Initialize sample data on first load
     initializeSampleData();
-    initializeTasksData();
   }, []);
 
   const getPageTitle = (path: string) => {
