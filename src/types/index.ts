@@ -62,4 +62,4 @@ export interface DashboardStats {
 }
 
 // Re-export task-related types
-export { Task, Ticket, TaskColumn } from './tasks';
+export type { Task, Ticket, TaskColumn } from './tasks';
