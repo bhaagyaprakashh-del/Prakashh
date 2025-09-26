@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Scrollbar Styles */
+@layer utilities {
+  /* Webkit Scrollbar Styles */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 0px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: transparent;
+  }
+  
+  /* Firefox Scrollbar Styles */
+  .scrollbar-thin {
+    scrollbar-width: none;
+    scrollbar-color: transparent transparent;
+  }
+  
+  /* Transparent scrollbar track utilities */
+  .scrollbar-track-transparent::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thumb-slate-600\/30::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
+  
+  .hover\:scrollbar-thumb-slate-500\/50:hover::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
+  
+  /* Completely hidden scrollbar */
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
