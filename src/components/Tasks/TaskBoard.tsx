@@ -26,8 +26,6 @@ import {
   Phone
 } from 'lucide-react';
 import { Task, TaskColumn } from '../../types/tasks';
-import { tasksStorage } from '../../utils/tasksStorage';
-import toast from 'react-hot-toast';
 
 const taskColumns: TaskColumn[] = [
   { id: 'todo', name: 'To Do', status: 'todo', order: 1, color: 'bg-yellow-100 border-yellow-300', limit: 10, isCompleted: false },
@@ -37,15 +35,57 @@ const taskColumns: TaskColumn[] = [
   { id: 'blocked', name: 'Blocked', status: 'blocked', order: 5, color: 'bg-red-100 border-red-300', limit: undefined, isCompleted: false }
 ];
 
-export const TaskBoard: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
+const sampleTasks: Task[] = [
+  {
+    id: '1',
+    title: 'Follow up with TechCorp Solutions',
+    description: 'Call Rajesh Gupta to discuss premium chit scheme proposal',
+    type: 'call',
+    priority: 'high',
+    status: 'todo',
+    assignedTo: 'Priya Sharma',
+    assignedBy: 'Rajesh Kumar',
+    dueDate: '2024-03-16',
+    estimatedHours: 1,
+    leadId: 'lead_001',
+    tags: ['sales', 'follow-up'],
+    attachments: [],
+    comments: [],
+    subtasks: [],
+    createdAt: '2024-03-15',
+    updatedAt: '2024-03-15',
+    watchers: ['Rajesh Kumar'],
+    collaborators: [],
+    progressPercentage: 0
+  },
+  {
+    id: '2',
+    title: 'Prepare monthly sales report',
+    description: 'Compile sales data for March 2024',
+    type: 'documentation',
+    priority: 'medium',
+    status: 'in-progress',
+    assignedTo: 'Karthik Nair',
+    assignedBy: 'Rajesh Kumar',
+    dueDate: '2024-03-20',
+    estimatedHours: 4,
+    actualHours: 2,
+    tags: ['reporting', 'sales'],
+    attachments: [],
+    comments: [],
+    subtasks: [],
+    createdAt: '2024-03-14',
+    updatedAt: '2024-03-15',
+    startedAt: '2024-03-15T09:00:00',
+    watchers: [],
+    collaborators: [],
+    progressPercentage: 60
+  }
+];
 
-  // Load tasks on component mount
-  useEffect(() => {
-    const loadedTasks = tasksStorage.getTasks();
-    setTasks(loadedTasks);
-  }, []);
+export const TaskBoard: React.FC = () => {
+  const [tasks] = useState<Task[]>(sampleTasks);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const filteredTasks = useMemo(() => tasks.filter(task => {
     const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -66,16 +106,6 @@ export const TaskBoard: React.FC = () => {
     blocked: tasks.filter(t => t.status === 'blocked').length,
     overdue: tasks.filter(t => new Date(t.dueDate) < new Date() && t.status !== 'completed').length
   }), [tasks]);
-
-  const handleStatusChange = async (taskId: string, newStatus: Task['status']) => {
-    try {
-      tasksStorage.updateTaskStatus(taskId, newStatus);
-      setTasks(tasksStorage.getTasks());
-      toast.success(`Task moved to ${newStatus}`);
-    } catch (error) {
-      toast.error('Failed to update task status');
-    }
-  };
 
   return (
     <div className="h-full flex flex-col bg-slate-900 overflow-hidden">
@@ -216,14 +246,7 @@ export const TaskBoard: React.FC = () => {
                             <button className="p-1 text-blue-600 hover:bg-blue-50 rounded transition-colors">
                               <Eye className="h-4 w-4" />
                             </button>
-                            <button 
-                              onClick={() => handleStatusChange(task.id, 'in-progress')}
-                              className="p-1 text-green-600 hover:bg-green-50 rounded transition-colors"
-                              title="Start Task"
-                            >
-                              <Play className="h-4 w-4" />
-                            </button>
-                            <button className="p-1 text-purple-600 hover:bg-purple-50 rounded transition-colors">
+                            <button className="p-1 text-green-600 hover:bg-green-50 rounded transition-colors">
                               <Edit className="h-4 w-4" />
                             </button>
                           </div>

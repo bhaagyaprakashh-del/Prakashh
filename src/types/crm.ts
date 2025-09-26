@@ -17,6 +17,49 @@ export interface Lead {
   nextFollowUp?: string;
 }
 
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  type: 'call' | 'email' | 'meeting' | 'follow-up' | 'demo' | 'other';
+  priority: 'low' | 'medium' | 'high';
+  status: 'pending' | 'in-progress' | 'completed' | 'cancelled';
+  assignedTo: string;
+  assignedBy: string;
+  dueDate: string;
+  completedAt?: string;
+  leadId?: string;
+  customerId?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Ticket {
+  id: string;
+  subject: string;
+  description: string;
+  category: 'technical' | 'billing' | 'general' | 'complaint' | 'feature-request';
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  status: 'open' | 'in-progress' | 'resolved' | 'closed';
+  customerId: string;
+  assignedTo?: string;
+  createdAt: string;
+  updatedAt: string;
+  resolvedAt?: string;
+  slaDeadline: string;
+  responses: TicketResponse[];
+}
+
+export interface TicketResponse {
+  id: string;
+  ticketId: string;
+  message: string;
+  isInternal: boolean;
+  createdBy: string;
+  createdAt: string;
+  attachments?: string[];
+}
+
 export interface Customer {
   id: string;
   name: string;
