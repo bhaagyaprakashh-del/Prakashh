@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Bell, User, Menu, Upload, LogOut, ChevronDown, Clock, X, CheckCircle, AlertTriangle, Info, Settings, HelpCircle } from 'lucide-react';
+import { Search, Bell, User, Menu, Upload, LogOut, ChevronDown, Clock, X, CheckCircle, AlertTriangle, Info } from 'lucide-react';
 import { navigation } from '../../config/navigation';
 
 interface HeaderProps {
@@ -286,37 +286,62 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ isOpen, onClose }) =>
 };
 
 const SearchDropdown: React.FC<SearchDropdownProps> = ({ isOpen, searchTerm, onClose, onNavigate }) => {
-  const filteredItems = useMemo(() => navigation.flatMap(module => {
-    const moduleMatches = module.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const childMatches = module.children?.filter(child => 
-      child.name.toLowerCase().includes(searchTerm.toLowerCase())
-    ) || [];
+  // Get main module pages for display
+  const mainModulePages = useMemo(() => {
+    const popularPages = [
+      { id: 'dashboard', name: 'Dashboard', icon: navigation[0].icon, module: 'Overview' },
+      { id: 'leads-all', name: 'All Leads', icon: navigation[1].children?.[0].icon, module: 'Leads & Sales' },
+      { id: 'leads-kanban', name: 'Leads Pipeline', icon: navigation[1].children?.[1].icon, module: 'Leads & Sales' },
+      { id: 'tasks-my', name: 'My Tasks', icon: navigation[2].children?.[0].icon, module: 'Tasks & Tickets' },
+      { id: 'chit-list', name: 'Chit Groups', icon: navigation[7].children?.[2].icon, module: 'Chit Operations' },
+      { id: 'subscribers-all', name: 'All Subscribers', icon: navigation[5].children?.[0].icon, module: 'Subscribers' },
+      { id: 'agents-directory', name: 'Agent Directory', icon: navigation[6].children?.[0].icon, module: 'Agents' },
+      { id: 'hrms-directory', name: 'Employee Directory', icon: navigation[8].children?.[0].icon, module: 'HRMS' },
+      { id: 'reports-dashboard', name: 'Reports Dashboard', icon: navigation[9].children?.[0].icon, module: 'Reports' },
+      { id: 'company-profile-branding', name: 'Company Profile', icon: navigation[10].children?.[0].icon, module: 'Settings' }
+    ];
+    return popularPages;
+  }, []);
 
-    const results = [];
-    
-    if (moduleMatches) {
-      results.push({
-        id: module.id,
-        name: module.name,
-        type: 'module',
-        icon: module.icon,
-        path: module.children ? null : module.id
-      });
+  const filteredItems = useMemo(() => {
+    if (!searchTerm.trim()) {
+      return mainModulePages;
     }
 
-    childMatches.forEach(child => {
-      results.push({
-        id: child.id,
-        name: child.name,
-        type: 'page',
-        icon: child.icon,
-        path: child.id,
-        parent: module.name
-      });
-    });
+    return navigation.flatMap(module => {
+      const moduleMatches = module.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const childMatches = module.children?.filter(child => 
+        child.name.toLowerCase().includes(searchTerm.toLowerCase())
+      ) || [];
 
-    return results;
-  }), [searchTerm]);
+      const results = [];
+      
+      if (moduleMatches) {
+        results.push({
+          id: module.id,
+          name: module.name,
+          type: 'module',
+          icon: module.icon,
+          path: module.children ? null : module.id,
+          module: module.name
+        });
+      }
+
+      childMatches.forEach(child => {
+        results.push({
+          id: child.id,
+          name: child.name,
+          type: 'page',
+          icon: child.icon,
+          path: child.id,
+          parent: module.name,
+          module: module.name
+        });
+      });
+
+      return results;
+    });
+  }, [searchTerm, mainModulePages]);
 
   if (!isOpen) return null;
 
@@ -327,45 +352,51 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({ isOpen, searchTerm, onC
       
       {/* Dropdown */}
       <div className="absolute left-0 right-0 top-full mt-2 bg-slate-800/90 backdrop-blur-xl border border-yellow-400/40 rounded-2xl shadow-2xl z-50 max-h-96 overflow-hidden">
-        {searchTerm.trim() && filteredItems.length > 0 ? (
+        <div className="p-4 border-b border-yellow-400/30">
+          <h3 className="text-slate-50 font-medium text-sm">
+            {searchTerm.trim() ? `Search Results (${filteredItems.length})` : 'Popular Pages'}
+          </h3>
+        </div>
+        
+        {filteredItems.length > 0 ? (
           <div className="p-2 max-h-80 overflow-y-auto">
             {filteredItems.map((item) => {
               const Icon = item.icon;
               return (
-                <button
+                <div
                   key={item.id}
-                  onClick={() => {
-                    if (item.path) {
-                      onNavigate(item.path);
-                    }
-                    onClose();
-                  }}
-                  className="w-full flex items-center space-x-3 p-3 text-slate-300 hover:text-slate-50 hover:bg-slate-700/50 rounded-xl transition-all text-left"
-                  disabled={!item.path}
+                  className="flex items-center justify-between p-3 text-slate-300 hover:bg-slate-700/50 rounded-xl transition-all group"
                 >
-                  <div className="p-2 bg-slate-700/50 rounded-lg">
-                    <Icon className="h-4 w-4" />
+                  <div className="flex items-center space-x-3 flex-1">
+                    <div className="p-2 bg-slate-700/50 rounded-lg group-hover:bg-slate-600/50 transition-all">
+                      <Icon className="h-5 w-5 text-blue-400" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-slate-50">{item.name}</p>
+                      <p className="text-xs text-slate-400">{item.module}</p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">{item.name}</p>
-                    {item.parent && (
-                      <p className="text-xs text-slate-400">{item.parent}</p>
-                    )}
-                    <p className="text-xs text-slate-500 capitalize">{item.type}</p>
-                  </div>
-                </button>
+                  {item.path && (
+                    <button
+                      onClick={() => {
+                        onNavigate(item.path!);
+                        onClose();
+                      }}
+                      className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-all opacity-0 group-hover:opacity-100"
+                    >
+                      GO
+                    </button>
+                  )}
+                </div>
               );
             })}
-          </div>
-        ) : searchTerm.trim() ? (
-          <div className="p-6 text-center">
-            <Search className="h-8 w-8 mx-auto text-slate-500 mb-2" />
-            <p className="text-slate-400 text-sm">No results found for "{searchTerm}"</p>
           </div>
         ) : (
           <div className="p-6 text-center">
             <Search className="h-8 w-8 mx-auto text-slate-500 mb-2" />
-            <p className="text-slate-400 text-sm">Start typing to search modules and pages...</p>
+            <p className="text-slate-400 text-sm">
+              {searchTerm.trim() ? `No results found for "${searchTerm}"` : 'Start typing to search...'}
+            </p>
           </div>
         )}
       </div>

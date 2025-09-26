@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useEffect } from 'react';
 import {
   Plus,
   Search,
@@ -23,70 +24,32 @@ import {
   Award,
   TrendingUp,
   Zap,
-  MoreVertical
+  MoreVertical,
+  ArrowLeft,
+  Save,
+  X,
+  Trash2,
+  Play
 } from 'lucide-react';
-import { Ticket } from '../../types/tasks';
-
-const sampleTickets: Ticket[] = [
-  {
-    id: '1',
-    ticketNumber: 'TKT-2024-001',
-    subject: 'Unable to access chit group details',
-    description: 'Customer cannot view their chit group information in the portal.',
-    category: 'technical',
-    priority: 'high',
-    status: 'open',
-    customerId: 'cust_001',
-    customerName: 'Rajesh Gupta',
-    customerEmail: 'rajesh.gupta@techcorp.com',
-    customerPhone: '+91 98765 43210',
-    assignedTo: 'Karthik Nair',
-    assignedBy: 'System',
-    department: 'Technical Support',
-    slaLevel: 'priority',
-    slaDeadline: '2024-03-16T14:00:00',
-    createdAt: '2024-03-15T10:00:00',
-    updatedAt: '2024-03-15T10:00:00',
-    responses: [],
-    internalNotes: [],
-    tags: ['portal', 'access-issue'],
-    source: 'email'
-  },
-  {
-    id: '2',
-    ticketNumber: 'TKT-2024-002',
-    subject: 'Payment not reflecting in account',
-    description: 'Customer made payment 3 days ago but it is not showing in their account balance.',
-    category: 'billing',
-    priority: 'critical',
-    status: 'in-progress',
-    customerId: 'cust_002',
-    customerName: 'Sunita Reddy',
-    customerEmail: 'sunita.reddy@gmail.com',
-    customerPhone: '+91 98765 43211',
-    assignedTo: 'Amit Patel',
-    assignedBy: 'Rajesh Kumar',
-    department: 'Finance',
-    slaLevel: 'vip',
-    slaDeadline: '2024-03-15T16:00:00',
-    responseTime: 45,
-    createdAt: '2024-03-14T14:30:00',
-    updatedAt: '2024-03-15T09:15:00',
-    firstResponseAt: '2024-03-14T15:15:00',
-    responses: [],
-    internalNotes: [],
-    tags: ['payment', 'billing'],
-    source: 'phone'
-  }
-];
+import { Ticket } from '../../types';
+import { tasksStorage } from '../../utils/tasksStorage';
+import toast from 'react-hot-toast';
 
 export const TicketsInbox: React.FC = () => {
-  const [tickets] = useState<Ticket[]>(sampleTickets);
+  const [tickets, setTickets] = useState<Ticket[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'inbox' | 'my'>('inbox');
+  const [showTicketForm, setShowTicketForm] = useState(false);
+  const [editingTicket, setEditingTicket] = useState<Ticket | null>(null);
 
   const currentUser = 'Karthik Nair';
+
+  // Load tickets on component mount
+  useEffect(() => {
+    const loadedTickets = tasksStorage.getTickets();
+    setTickets(loadedTickets);
+  }, []);
 
   const filteredTickets = useMemo(() => {
     let filtered = tickets;
@@ -117,6 +80,79 @@ export const TicketsInbox: React.FC = () => {
     overdue: filteredTickets.filter(t => new Date(t.slaDeadline) < new Date() && !['resolved', 'closed'].includes(t.status)).length
   }), [filteredTickets, viewMode, tickets, currentUser]);
 
+  const handleCreateTicket = () => {
+    setEditingTicket(null);
+    setShowTicketForm(true);
+  };
+
+  const handleEditTicket = (ticket: Ticket) => {
+    setEditingTicket(ticket);
+    setShowTicketForm(true);
+  };
+
+  const handleDeleteTicket = async (ticketId: string) => {
+    if (window.confirm('Are you sure you want to delete this ticket?')) {
+      try {
+        tasksStorage.deleteTicket(ticketId);
+        setTickets(tasksStorage.getTickets());
+        toast.success('Ticket deleted successfully');
+      } catch (error) {
+        toast.error('Failed to delete ticket');
+      }
+    }
+  };
+
+  const handleStatusChange = async (ticketId: string, newStatus: Ticket['status']) => {
+    try {
+      tasksStorage.updateTicketStatus(ticketId, newStatus);
+      setTickets(tasksStorage.getTickets());
+      toast.success(`Ticket status updated to ${newStatus}`);
+    } catch (error) {
+      toast.error('Failed to update ticket status');
+    }
+  };
+
+  const handleTicketSubmit = async (ticketData: Partial<Ticket>) => {
+    try {
+      if (editingTicket) {
+        const updatedTicket = { ...editingTicket, ...ticketData } as Ticket;
+        tasksStorage.updateTicket(updatedTicket);
+        toast.success('Ticket updated successfully');
+      } else {
+        const newTicket: Ticket = {
+          id: Date.now().toString(),
+          ticketNumber: `TKT-${new Date().getFullYear()}-${String(Date.now()).slice(-3)}`,
+          subject: ticketData.subject!,
+          description: ticketData.description!,
+          category: ticketData.category!,
+          priority: ticketData.priority!,
+          status: 'open',
+          customerId: ticketData.customerId!,
+          customerName: ticketData.customerName!,
+          customerEmail: ticketData.customerEmail!,
+          customerPhone: ticketData.customerPhone!,
+          assignedTo: ticketData.assignedTo,
+          assignedBy: currentUser,
+          department: ticketData.department!,
+          slaLevel: 'standard',
+          slaDeadline: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours from now
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          responses: [],
+          internalNotes: [],
+          tags: ticketData.tags || [],
+          source: 'portal'
+        };
+        tasksStorage.addTicket(newTicket);
+        toast.success('Ticket created successfully');
+      }
+      setTickets(tasksStorage.getTickets());
+      setShowTicketForm(false);
+    } catch (error) {
+      toast.error('Failed to save ticket');
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'open': return 'bg-blue-100 text-blue-800 border-blue-200';
@@ -127,6 +163,16 @@ export const TicketsInbox: React.FC = () => {
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
+
+  if (showTicketForm) {
+    return (
+      <TicketForm
+        ticket={editingTicket}
+        onSubmit={handleTicketSubmit}
+        onCancel={() => setShowTicketForm(false)}
+      />
+    );
+  }
 
   return (
     <div className="h-full flex flex-col bg-slate-900 overflow-hidden">
@@ -167,6 +213,13 @@ export const TicketsInbox: React.FC = () => {
             </button>
           </div>
           <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-all">
+            <Plus className="h-4 w-4 mr-2" />
+            Create Ticket
+          </button>
+          <button
+            onClick={handleCreateTicket}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-all"
+          >
             <Plus className="h-4 w-4 mr-2" />
             New Ticket
           </button>
@@ -338,11 +391,38 @@ export const TicketsInbox: React.FC = () => {
                   <button className="p-2 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all">
                     <Eye className="h-4 w-4" />
                   </button>
-                  <button className="p-2 text-slate-400 hover:text-green-400 hover:bg-green-500/10 rounded-lg transition-all">
-                    <MessageSquare className="h-4 w-4" />
-                  </button>
-                  <button className="p-2 text-slate-400 hover:text-purple-400 hover:bg-purple-500/10 rounded-lg transition-all">
+                  <button 
+                    onClick={() => handleEditTicket(ticket)}
+                    className="p-2 text-slate-400 hover:text-green-400 hover:bg-green-500/10 rounded-lg transition-all"
+                  >
                     <Edit className="h-4 w-4" />
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteTicket(ticket.id)}
+                    className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                  {ticket.status === 'open' && (
+                    <button 
+                      onClick={() => handleStatusChange(ticket.id, 'in-progress')}
+                      className="p-2 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all"
+                      title="Start Working"
+                    >
+                      <Play className="h-4 w-4" />
+                    </button>
+                  )}
+                  {ticket.status === 'in-progress' && (
+                    <button 
+                      onClick={() => handleStatusChange(ticket.id, 'resolved')}
+                      className="p-2 text-slate-400 hover:text-green-400 hover:bg-green-500/10 rounded-lg transition-all"
+                      title="Mark Resolved"
+                    >
+                      <CheckCircle className="h-4 w-4" />
+                    </button>
+                  )}
+                  <button className="p-2 text-slate-400 hover:text-purple-400 hover:bg-purple-500/10 rounded-lg transition-all">
+                    <MessageSquare className="h-4 w-4" />
                   </button>
                 </div>
               </div>
@@ -362,6 +442,359 @@ export const TicketsInbox: React.FC = () => {
             </p>
           </div>
         )}
+      </div>
+    </div>
+  );
+};
+
+// Ticket Form Component
+const TicketForm: React.FC<{
+  ticket: Ticket | null;
+  onSubmit: (data: Partial<Ticket>) => void;
+  onCancel: () => void;
+}> = ({ ticket, onSubmit, onCancel }) => {
+  const [formData, setFormData] = useState({
+    subject: ticket?.subject || '',
+    description: ticket?.description || '',
+    category: ticket?.category || 'general',
+    priority: ticket?.priority || 'medium',
+    customerId: ticket?.customerId || '',
+    customerName: ticket?.customerName || '',
+    customerEmail: ticket?.customerEmail || '',
+    customerPhone: ticket?.customerPhone || '',
+    assignedTo: ticket?.assignedTo || '',
+    department: ticket?.department || 'Customer Service',
+    tags: ticket?.tags || []
+  });
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [newTag, setNewTag] = useState('');
+
+  const categories = [
+    { value: 'technical', label: 'Technical' },
+    { value: 'billing', label: 'Billing' },
+    { value: 'general', label: 'General' },
+    { value: 'complaint', label: 'Complaint' },
+    { value: 'feature-request', label: 'Feature Request' },
+    { value: 'bug-report', label: 'Bug Report' },
+    { value: 'account', label: 'Account' },
+    { value: 'chit-fund', label: 'Chit Fund' }
+  ];
+
+  const departments = [
+    'Customer Service',
+    'Technical Support',
+    'Finance',
+    'Operations',
+    'Sales & Marketing'
+  ];
+
+  const teamMembers = [
+    'Karthik Nair',
+    'Priya Sharma',
+    'Amit Patel',
+    'Rajesh Kumar',
+    'Vikram Singh'
+  ];
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.subject.trim()) {
+      newErrors.subject = 'Subject is required';
+    }
+
+    if (!formData.description.trim()) {
+      newErrors.description = 'Description is required';
+    }
+
+    if (!formData.customerName.trim()) {
+      newErrors.customerName = 'Customer name is required';
+    }
+
+    if (!formData.customerEmail.trim()) {
+      newErrors.customerEmail = 'Customer email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.customerEmail)) {
+      newErrors.customerEmail = 'Please enter a valid email';
+    }
+
+    if (!formData.customerPhone.trim()) {
+      newErrors.customerPhone = 'Customer phone is required';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validateForm()) {
+      onSubmit({
+        ...formData,
+        customerId: formData.customerId || `cust_${Date.now()}`
+      });
+    }
+  };
+
+  const handleChange = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  const addTag = () => {
+    if (newTag.trim() && !formData.tags.includes(newTag.trim())) {
+      setFormData(prev => ({
+        ...prev,
+        tags: [...prev.tags, newTag.trim()]
+      }));
+      setNewTag('');
+    }
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    setFormData(prev => ({
+      ...prev,
+      tags: prev.tags.filter(tag => tag !== tagToRemove)
+    }));
+  };
+
+  return (
+    <div className="h-full flex flex-col bg-slate-900 overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b border-yellow-400/30 flex-shrink-0">
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={onCancel}
+            className="p-2 text-slate-400 hover:text-slate-50 hover:bg-slate-700/50 rounded-lg transition-all"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-50">
+              {ticket ? 'Edit Ticket' : 'Create New Ticket'}
+            </h1>
+            <p className="mt-1 text-sm text-slate-400">
+              {ticket ? 'Update ticket information' : 'Create a new support ticket'}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Form Content */}
+      <div className="flex-1 overflow-y-auto p-6 scrollbar-none">
+        <div className="max-w-4xl mx-auto">
+          <form onSubmit={handleSubmit} className="bg-slate-800/40 backdrop-blur-xl rounded-2xl p-8 border border-yellow-400/30 space-y-6">
+            
+            {/* Customer Information */}
+            <div>
+              <h3 className="text-lg font-semibold text-slate-50 mb-4 flex items-center">
+                <User className="h-5 w-5 mr-2" />
+                Customer Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-slate-50 mb-2">Customer Name *</label>
+                  <input
+                    type="text"
+                    value={formData.customerName}
+                    onChange={(e) => handleChange('customerName', e.target.value)}
+                    className={`w-full px-3 py-2 bg-slate-700/50 border rounded-lg text-slate-50 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm ${
+                      errors.customerName ? 'border-red-500' : 'border-yellow-400/30'
+                    }`}
+                    placeholder="Enter customer name"
+                  />
+                  {errors.customerName && <p className="mt-1 text-sm text-red-400">{errors.customerName}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-50 mb-2">Customer Email *</label>
+                  <input
+                    type="email"
+                    value={formData.customerEmail}
+                    onChange={(e) => handleChange('customerEmail', e.target.value)}
+                    className={`w-full px-3 py-2 bg-slate-700/50 border rounded-lg text-slate-50 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm ${
+                      errors.customerEmail ? 'border-red-500' : 'border-yellow-400/30'
+                    }`}
+                    placeholder="customer@example.com"
+                  />
+                  {errors.customerEmail && <p className="mt-1 text-sm text-red-400">{errors.customerEmail}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-50 mb-2">Customer Phone *</label>
+                  <input
+                    type="tel"
+                    value={formData.customerPhone}
+                    onChange={(e) => handleChange('customerPhone', e.target.value)}
+                    className={`w-full px-3 py-2 bg-slate-700/50 border rounded-lg text-slate-50 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm ${
+                      errors.customerPhone ? 'border-red-500' : 'border-yellow-400/30'
+                    }`}
+                    placeholder="+91 98765 43210"
+                  />
+                  {errors.customerPhone && <p className="mt-1 text-sm text-red-400">{errors.customerPhone}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-50 mb-2">Customer ID</label>
+                  <input
+                    type="text"
+                    value={formData.customerId}
+                    onChange={(e) => handleChange('customerId', e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-700/50 border border-yellow-400/30 rounded-lg text-slate-50 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm"
+                    placeholder="Customer ID (optional)"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Ticket Details */}
+            <div>
+              <h3 className="text-lg font-semibold text-slate-50 mb-4 flex items-center">
+                <Ticket className="h-5 w-5 mr-2" />
+                Ticket Details
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-slate-50 mb-2">Subject *</label>
+                  <input
+                    type="text"
+                    value={formData.subject}
+                    onChange={(e) => handleChange('subject', e.target.value)}
+                    className={`w-full px-3 py-2 bg-slate-700/50 border rounded-lg text-slate-50 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm ${
+                      errors.subject ? 'border-red-500' : 'border-yellow-400/30'
+                    }`}
+                    placeholder="Brief description of the issue"
+                  />
+                  {errors.subject && <p className="mt-1 text-sm text-red-400">{errors.subject}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-50 mb-2">Category</label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) => handleChange('category', e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-700/50 border border-yellow-400/30 rounded-lg text-slate-50 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm"
+                  >
+                    {categories.map(category => (
+                      <option key={category.value} value={category.value}>{category.label}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-50 mb-2">Priority</label>
+                  <select
+                    value={formData.priority}
+                    onChange={(e) => handleChange('priority', e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-700/50 border border-yellow-400/30 rounded-lg text-slate-50 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm"
+                  >
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                    <option value="critical">Critical</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-50 mb-2">Department</label>
+                  <select
+                    value={formData.department}
+                    onChange={(e) => handleChange('department', e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-700/50 border border-yellow-400/30 rounded-lg text-slate-50 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm"
+                  >
+                    {departments.map(dept => (
+                      <option key={dept} value={dept}>{dept}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-50 mb-2">Assign To</label>
+                  <select
+                    value={formData.assignedTo || ''}
+                    onChange={(e) => handleChange('assignedTo', e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-700/50 border border-yellow-400/30 rounded-lg text-slate-50 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm"
+                  >
+                    <option value="">Unassigned</option>
+                    {teamMembers.map(member => (
+                      <option key={member} value={member}>{member}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-50 mb-2">Description *</label>
+              <textarea
+                rows={4}
+                value={formData.description}
+                onChange={(e) => handleChange('description', e.target.value)}
+                className={`w-full px-3 py-2 bg-slate-700/50 border rounded-lg text-slate-50 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm ${
+                  errors.description ? 'border-red-500' : 'border-yellow-400/30'
+                }`}
+                placeholder="Describe the issue in detail"
+              />
+              {errors.description && <p className="mt-1 text-sm text-red-400">{errors.description}</p>}
+            </div>
+
+            {/* Tags */}
+            <div>
+              <label className="block text-sm font-medium text-slate-50 mb-2">Tags</label>
+              <div className="flex space-x-2 mb-3">
+                <input
+                  type="text"
+                  value={newTag}
+                  onChange={(e) => setNewTag(e.target.value)}
+                  className="flex-1 px-3 py-2 bg-slate-700/50 border border-yellow-400/30 rounded-lg text-slate-50 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm"
+                  placeholder="Add a tag"
+                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                />
+                <button
+                  type="button"
+                  onClick={addTag}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  <Plus className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {formData.tags.map((tag, index) => (
+                  <span key={index} className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800 border border-blue-200">
+                    #{tag}
+                    <button
+                      type="button"
+                      onClick={() => removeTag(tag)}
+                      className="ml-2 text-blue-600 hover:text-blue-800"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Form Actions */}
+            <div className="flex justify-end space-x-3 pt-6 border-t border-yellow-400/20">
+              <button
+                type="button"
+                onClick={onCancel}
+                className="px-6 py-2 text-sm font-medium text-slate-300 bg-slate-700/50 border border-yellow-400/30 rounded-lg hover:bg-slate-700 transition-all backdrop-blur-sm"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="inline-flex items-center px-6 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg shadow-sm hover:bg-blue-700 transition-all"
+              >
+                <Save className="h-4 w-4 mr-2" />
+                {ticket ? 'Update Ticket' : 'Create Ticket'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

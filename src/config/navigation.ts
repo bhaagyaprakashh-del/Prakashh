@@ -15,13 +15,7 @@ export const navigation: NavigationItem[] = [
   {
     id: 'dashboard',
     name: 'Dashboard',
-    icon: Home,
-    children: [
-      { id: 'dashboard-overview', name: 'Overview', icon: BarChart3 },
-      { id: 'dashboard-kpis', name: 'KPIs & Charts', icon: Target },
-      { id: 'dashboard-today', name: 'Today\'s Actions', icon: Calendar },
-      { id: 'dashboard-alerts', name: 'Alerts & Notifications', icon: Bell }
-    ]
+    icon: Home
   },
   {
     id: 'leads',
