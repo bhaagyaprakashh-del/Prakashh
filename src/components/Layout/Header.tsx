@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Bell, User, Menu, Upload, LogOut, ChevronDown, Clock, X, CheckCircle, AlertTriangle, Info } from 'lucide-react';
 import { navigation } from '../../config/navigation';
