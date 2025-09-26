@@ -1,5 +1,32 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { Plus, Search, Filter, Calendar, Clock, Users, CheckCircle, AlertTriangle, Play, Pause, RotateCcw, Eye, CreditCard as Edit, Trash2, MessageSquare, Paperclip, Star, Flag, User, Target, Award, TrendingUp, Zap, MoreVertical, Download, Upload } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import {
+  Plus,
+  Search,
+  Filter,
+  Calendar,
+  Clock,
+  Users,
+  CheckCircle,
+  AlertTriangle,
+  Play,
+  Pause,
+  RotateCcw,
+  Eye,
+  Edit,
+  Trash2,
+  MessageSquare,
+  Paperclip,
+  Star,
+  Flag,
+  User,
+  Target,
+  Award,
+  TrendingUp,
+  Zap,
+  MoreVertical,
+  Download,
+  Upload
+} from 'lucide-react';
 import { Task } from '../../types/tasks';
 import { tasksStorage } from '../../utils/tasksStorage';
 import toast from 'react-hot-toast';

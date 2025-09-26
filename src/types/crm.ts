@@ -34,7 +34,7 @@ export interface Task {
   updatedAt: string;
 }
 
-export interface CrmTicket {
+export interface Ticket {
   id: string;
   subject: string;
   description: string;
@@ -47,10 +47,10 @@ export interface CrmTicket {
   updatedAt: string;
   resolvedAt?: string;
   slaDeadline: string;
-  responses: CrmTicketResponse[];
+  responses: TicketResponse[];
 }
 
-export interface CrmTicketResponse {
+export interface TicketResponse {
   id: string;
   ticketId: string;
   message: string;
