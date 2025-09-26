@@ -10,8 +10,6 @@ import { UsersPage } from './components/Users/UsersPage';
 import { KanbanBoard } from './components/Kanban/KanbanBoard';
 import { AppHeader } from './components/Header/AppHeader';
 import { AppSidebar } from './components/Sidebar/AppSidebar';
-import { ChatPage } from './modules/messaging/ChatPage';
-import { BroadcastPage } from './modules/messaging/BroadcastPage';
 import './styles/scrollbar.css';
 
 const MainLayout: React.FC = () => {
@@ -25,10 +23,6 @@ const MainLayout: React.FC = () => {
         return <UsersPage />;
       case 'leads-kanban':
         return <KanbanBoard />;
-      case 'messaging-chat':
-        return <ChatPage />;
-      case 'messaging-broadcast':
-        return <BroadcastPage />;
       default:
         return <AuctionsPage />;
     }
