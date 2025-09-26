@@ -10,6 +10,8 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ currentPage, onPageChang
     { id: 'auctions', label: 'Auctions', icon: '🏷️' },
     { id: 'users', label: 'Users', icon: '👥' },
     { id: 'leads-kanban', label: 'Leads & Sales', icon: '📊' },
+    { id: 'messaging-chat', label: 'Chat / Support', icon: '💬' },
+    { id: 'messaging-broadcast', label: 'Broadcast', icon: '📢' },
   ];
 
   return (
