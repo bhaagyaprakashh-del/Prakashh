@@ -27,25 +27,63 @@ import {
   Download,
   Upload
 } from 'lucide-react';
-import { Task } from '../../types';
-import { tasksStorage } from '../../utils/tasksStorage';
-import toast from 'react-hot-toast';
+import { Task } from '../../types/tasks';
+
+const sampleTasks: Task[] = [
+  {
+    id: '1',
+    title: 'Follow up with TechCorp Solutions',
+    description: 'Call Rajesh Gupta to discuss premium chit scheme proposal',
+    type: 'call',
+    priority: 'high',
+    status: 'todo',
+    assignedTo: 'Priya Sharma',
+    assignedBy: 'Rajesh Kumar',
+    dueDate: '2024-03-16',
+    estimatedHours: 1,
+    leadId: 'lead_001',
+    tags: ['sales', 'follow-up'],
+    attachments: [],
+    comments: [],
+    subtasks: [],
+    createdAt: '2024-03-15',
+    updatedAt: '2024-03-15',
+    watchers: ['Rajesh Kumar'],
+    collaborators: [],
+    progressPercentage: 0
+  },
+  {
+    id: '2',
+    title: 'Prepare monthly sales report',
+    description: 'Compile sales data for March 2024',
+    type: 'documentation',
+    priority: 'medium',
+    status: 'in-progress',
+    assignedTo: 'Karthik Nair',
+    assignedBy: 'Rajesh Kumar',
+    dueDate: '2024-03-20',
+    estimatedHours: 4,
+    actualHours: 2,
+    tags: ['reporting', 'sales'],
+    attachments: [],
+    comments: [],
+    subtasks: [],
+    createdAt: '2024-03-14',
+    updatedAt: '2024-03-15',
+    startedAt: '2024-03-15T09:00:00',
+    watchers: [],
+    collaborators: [],
+    progressPercentage: 60
+  }
+];
 
 export const MyTasks: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks] = useState<Task[]>(sampleTasks);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'my' | 'team'>('my');
-  const [showTaskForm, setShowTaskForm] = useState(false);
-  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   const currentUser = 'Priya Sharma';
-
-  // Load tasks on component mount
-  useEffect(() => {
-    const loadedTasks = tasksStorage.getTasks();
-    setTasks(loadedTasks);
-  }, []);
 
   const filteredTasks = useMemo(() => {
     let filtered = tasks;
@@ -72,86 +110,6 @@ export const MyTasks: React.FC = () => {
     blocked: filteredTasks.filter(t => t.status === 'blocked').length,
     overdue: filteredTasks.filter(t => new Date(t.dueDate) < new Date() && t.status !== 'completed').length
   }), [filteredTasks, viewMode, tasks, currentUser]);
-
-  const handleCreateTask = () => {
-    setEditingTask(null);
-    setShowTaskForm(true);
-  };
-
-  const handleEditTask = (task: Task) => {
-    setEditingTask(task);
-    setShowTaskForm(true);
-  };
-
-  const handleDeleteTask = async (taskId: string) => {
-    if (window.confirm('Are you sure you want to delete this task?')) {
-      try {
-        tasksStorage.deleteTask(taskId);
-        setTasks(tasksStorage.getTasks());
-        toast.success('Task deleted successfully');
-      } catch (error) {
-        toast.error('Failed to delete task');
-      }
-    }
-  };
-
-  const handleStatusChange = async (taskId: string, newStatus: Task['status']) => {
-    try {
-      tasksStorage.updateTaskStatus(taskId, newStatus);
-      setTasks(tasksStorage.getTasks());
-      toast.success(`Task status updated to ${newStatus}`);
-    } catch (error) {
-      toast.error('Failed to update task status');
-    }
-  };
-
-  const handleTaskSubmit = async (taskData: Partial<Task>) => {
-    try {
-      if (editingTask) {
-        const updatedTask = { ...editingTask, ...taskData } as Task;
-        tasksStorage.updateTask(updatedTask);
-        toast.success('Task updated successfully');
-      } else {
-        const newTask: Task = {
-          id: Date.now().toString(),
-          title: taskData.title!,
-          description: taskData.description!,
-          type: taskData.type!,
-          priority: taskData.priority!,
-          status: 'todo',
-          assignedTo: taskData.assignedTo!,
-          assignedBy: currentUser,
-          dueDate: taskData.dueDate!,
-          estimatedHours: taskData.estimatedHours!,
-          tags: taskData.tags || [],
-          attachments: [],
-          comments: [],
-          subtasks: [],
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          watchers: [],
-          collaborators: [],
-          progressPercentage: 0
-        };
-        tasksStorage.addTask(newTask);
-        toast.success('Task created successfully');
-      }
-      setTasks(tasksStorage.getTasks());
-      setShowTaskForm(false);
-    } catch (error) {
-      toast.error('Failed to save task');
-    }
-  };
-
-  if (showTaskForm) {
-    return (
-      <TaskForm
-        task={editingTask}
-        onSubmit={handleTaskSubmit}
-        onCancel={() => setShowTaskForm(false)}
-      />
-    );
-  }
 
   return (
     <div className="h-full flex flex-col bg-slate-900 overflow-hidden">
@@ -192,13 +150,6 @@ export const MyTasks: React.FC = () => {
             </button>
           </div>
           <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-all">
-            <Plus className="h-4 w-4 mr-2" />
-            Create Task
-          </button>
-          <button
-            onClick={handleCreateTask}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-all"
-          >
             <Plus className="h-4 w-4 mr-2" />
             New Task
           </button>
@@ -364,27 +315,9 @@ export const MyTasks: React.FC = () => {
                   <button className="p-2 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all">
                     <Eye className="h-4 w-4" />
                   </button>
-                  <button 
-                    onClick={() => handleEditTask(task)}
-                    className="p-2 text-slate-400 hover:text-green-400 hover:bg-green-500/10 rounded-lg transition-all"
-                  >
+                  <button className="p-2 text-slate-400 hover:text-green-400 hover:bg-green-500/10 rounded-lg transition-all">
                     <Edit className="h-4 w-4" />
                   </button>
-                  <button 
-                    onClick={() => handleDeleteTask(task.id)}
-                    className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                  {task.status !== 'completed' && (
-                    <button 
-                      onClick={() => handleStatusChange(task.id, 'completed')}
-                      className="p-2 text-slate-400 hover:text-green-400 hover:bg-green-500/10 rounded-lg transition-all"
-                      title="Mark Complete"
-                    >
-                      <CheckCircle className="h-4 w-4" />
-                    </button>
-                  )}
                 </div>
               </div>
             </div>
@@ -403,294 +336,6 @@ export const MyTasks: React.FC = () => {
             </p>
           </div>
         )}
-      </div>
-    </div>
-  );
-};
-
-// Task Form Component
-const TaskForm: React.FC<{
-  task: Task | null;
-  onSubmit: (data: Partial<Task>) => void;
-  onCancel: () => void;
-}> = ({ task, onSubmit, onCancel }) => {
-  const [formData, setFormData] = useState({
-    title: task?.title || '',
-    description: task?.description || '',
-    type: task?.type || 'other',
-    priority: task?.priority || 'medium',
-    assignedTo: task?.assignedTo || '',
-    dueDate: task?.dueDate || new Date().toISOString().split('T')[0],
-    estimatedHours: task?.estimatedHours || 1,
-    tags: task?.tags || []
-  });
-
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [newTag, setNewTag] = useState('');
-
-  const teamMembers = [
-    'Priya Sharma',
-    'Karthik Nair', 
-    'Rajesh Kumar',
-    'Vikram Singh',
-    'Amit Patel'
-  ];
-
-  const taskTypes = [
-    { value: 'call', label: 'Call' },
-    { value: 'email', label: 'Email' },
-    { value: 'meeting', label: 'Meeting' },
-    { value: 'follow-up', label: 'Follow-up' },
-    { value: 'demo', label: 'Demo' },
-    { value: 'documentation', label: 'Documentation' },
-    { value: 'development', label: 'Development' },
-    { value: 'review', label: 'Review' },
-    { value: 'other', label: 'Other' }
-  ];
-
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.title.trim()) {
-      newErrors.title = 'Task title is required';
-    }
-
-    if (!formData.description.trim()) {
-      newErrors.description = 'Task description is required';
-    }
-
-    if (!formData.assignedTo) {
-      newErrors.assignedTo = 'Please assign the task to someone';
-    }
-
-    if (!formData.dueDate) {
-      newErrors.dueDate = 'Due date is required';
-    }
-
-    if (formData.estimatedHours <= 0) {
-      newErrors.estimatedHours = 'Estimated hours must be greater than 0';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validateForm()) {
-      onSubmit(formData);
-    }
-  };
-
-  const handleChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
-  };
-
-  const addTag = () => {
-    if (newTag.trim() && !formData.tags.includes(newTag.trim())) {
-      setFormData(prev => ({
-        ...prev,
-        tags: [...prev.tags, newTag.trim()]
-      }));
-      setNewTag('');
-    }
-  };
-
-  const removeTag = (tagToRemove: string) => {
-    setFormData(prev => ({
-      ...prev,
-      tags: prev.tags.filter(tag => tag !== tagToRemove)
-    }));
-  };
-
-  return (
-    <div className="h-full flex flex-col bg-slate-900 overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-yellow-400/30 flex-shrink-0">
-        <div className="flex items-center space-x-4">
-          <button
-            onClick={onCancel}
-            className="p-2 text-slate-400 hover:text-slate-50 hover:bg-slate-700/50 rounded-lg transition-all"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
-          <div>
-            <h1 className="text-2xl font-bold text-slate-50">
-              {task ? 'Edit Task' : 'Create New Task'}
-            </h1>
-            <p className="mt-1 text-sm text-slate-400">
-              {task ? 'Update task information' : 'Create a new task and assign to team member'}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Form Content */}
-      <div className="flex-1 overflow-y-auto p-6 scrollbar-none">
-        <div className="max-w-4xl mx-auto">
-          <form onSubmit={handleSubmit} className="bg-slate-800/40 backdrop-blur-xl rounded-2xl p-8 border border-yellow-400/30 space-y-6">
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-slate-50 mb-2">Task Title *</label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => handleChange('title', e.target.value)}
-                  className={`w-full px-3 py-2 bg-slate-700/50 border rounded-lg text-slate-50 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm ${
-                    errors.title ? 'border-red-500' : 'border-yellow-400/30'
-                  }`}
-                  placeholder="Enter task title"
-                />
-                {errors.title && <p className="mt-1 text-sm text-red-400">{errors.title}</p>}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-50 mb-2">Task Type</label>
-                <select
-                  value={formData.type}
-                  onChange={(e) => handleChange('type', e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-700/50 border border-yellow-400/30 rounded-lg text-slate-50 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm"
-                >
-                  {taskTypes.map(type => (
-                    <option key={type.value} value={type.value}>{type.label}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-50 mb-2">Priority</label>
-                <select
-                  value={formData.priority}
-                  onChange={(e) => handleChange('priority', e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-700/50 border border-yellow-400/30 rounded-lg text-slate-50 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm"
-                >
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
-                  <option value="critical">Critical</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-50 mb-2">Assign To *</label>
-                <select
-                  value={formData.assignedTo}
-                  onChange={(e) => handleChange('assignedTo', e.target.value)}
-                  className={`w-full px-3 py-2 bg-slate-700/50 border rounded-lg text-slate-50 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm ${
-                    errors.assignedTo ? 'border-red-500' : 'border-yellow-400/30'
-                  }`}
-                >
-                  <option value="">Select team member</option>
-                  {teamMembers.map(member => (
-                    <option key={member} value={member}>{member}</option>
-                  ))}
-                </select>
-                {errors.assignedTo && <p className="mt-1 text-sm text-red-400">{errors.assignedTo}</p>}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-50 mb-2">Due Date *</label>
-                <input
-                  type="date"
-                  value={formData.dueDate}
-                  onChange={(e) => handleChange('dueDate', e.target.value)}
-                  className={`w-full px-3 py-2 bg-slate-700/50 border rounded-lg text-slate-50 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm ${
-                    errors.dueDate ? 'border-red-500' : 'border-yellow-400/30'
-                  }`}
-                />
-                {errors.dueDate && <p className="mt-1 text-sm text-red-400">{errors.dueDate}</p>}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-50 mb-2">Estimated Hours *</label>
-                <input
-                  type="number"
-                  min="0.5"
-                  step="0.5"
-                  value={formData.estimatedHours}
-                  onChange={(e) => handleChange('estimatedHours', parseFloat(e.target.value) || 1)}
-                  className={`w-full px-3 py-2 bg-slate-700/50 border rounded-lg text-slate-50 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm ${
-                    errors.estimatedHours ? 'border-red-500' : 'border-yellow-400/30'
-                  }`}
-                  placeholder="1.0"
-                />
-                {errors.estimatedHours && <p className="mt-1 text-sm text-red-400">{errors.estimatedHours}</p>}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-50 mb-2">Description *</label>
-              <textarea
-                rows={4}
-                value={formData.description}
-                onChange={(e) => handleChange('description', e.target.value)}
-                className={`w-full px-3 py-2 bg-slate-700/50 border rounded-lg text-slate-50 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm ${
-                  errors.description ? 'border-red-500' : 'border-yellow-400/30'
-                }`}
-                placeholder="Describe the task in detail"
-              />
-              {errors.description && <p className="mt-1 text-sm text-red-400">{errors.description}</p>}
-            </div>
-
-            {/* Tags */}
-            <div>
-              <label className="block text-sm font-medium text-slate-50 mb-2">Tags</label>
-              <div className="flex space-x-2 mb-3">
-                <input
-                  type="text"
-                  value={newTag}
-                  onChange={(e) => setNewTag(e.target.value)}
-                  className="flex-1 px-3 py-2 bg-slate-700/50 border border-yellow-400/30 rounded-lg text-slate-50 placeholder-slate-400 focus:ring-2 focus:ring-blue-500 backdrop-blur-sm"
-                  placeholder="Add a tag"
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
-                />
-                <button
-                  type="button"
-                  onClick={addTag}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  <Plus className="h-4 w-4" />
-                </button>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {formData.tags.map((tag, index) => (
-                  <span key={index} className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800 border border-blue-200">
-                    #{tag}
-                    <button
-                      type="button"
-                      onClick={() => removeTag(tag)}
-                      className="ml-2 text-blue-600 hover:text-blue-800"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Form Actions */}
-            <div className="flex justify-end space-x-3 pt-6 border-t border-yellow-400/20">
-              <button
-                type="button"
-                onClick={onCancel}
-                className="px-6 py-2 text-sm font-medium text-slate-300 bg-slate-700/50 border border-yellow-400/30 rounded-lg hover:bg-slate-700 transition-all backdrop-blur-sm"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="inline-flex items-center px-6 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg shadow-sm hover:bg-blue-700 transition-all"
-              >
-                <Save className="h-4 w-4 mr-2" />
-                {task ? 'Update Task' : 'Create Task'}
-              </button>
-            </div>
-          </form>
-        </div>
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 // Tasks & Tickets Core Types
-
 export interface Task {
   id: string;
   title: string;
