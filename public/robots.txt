@@ -1,0 +1,41 @@
+# Robots.txt for Chit Funds CRM
+# https://chitsonline.com/robots.txt
+
+User-agent: *
+
+# Allow public pages
+Allow: /
+Allow: /login
+
+# Disallow private/sensitive areas
+Disallow: /dash/
+Disallow: /leads/
+Disallow: /subscribers/
+Disallow: /agents/
+Disallow: /chit/
+Disallow: /hrms/
+Disallow: /reports/
+Disallow: /messaging/
+Disallow: /calendar/
+Disallow: /tasks/
+Disallow: /settings/
+Disallow: /customize/
+Disallow: /notifications
+
+# Disallow API endpoints
+Disallow: /api/
+
+# Disallow admin areas
+Disallow: /admin/
+
+# Allow assets
+Allow: /assets/
+Allow: /images/
+Allow: /css/
+Allow: /js/
+
+# Sitemap location
+Sitemap: https://chitsonline.com/sitemap.xml
+
+# Crawl delay (be respectful)
+Crawl-delay: 1
