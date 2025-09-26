@@ -1,37 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useEffect } from 'react';
-import {
-  Plus,
-  Search,
-  Filter,
-  Inbox,
-  User,
-  Clock,
-  AlertTriangle,
-  CheckCircle,
-  MessageSquare,
-  Phone,
-  Mail,
-  Calendar,
-  Tag,
-  Eye,
-  Edit,
-  Archive,
-  Star,
-  Flag,
-  Users,
-  Target,
-  Award,
-  TrendingUp,
-  Zap,
-  MoreVertical,
-  ArrowLeft,
-  Save,
-  X,
-  Trash2,
-  Play
-} from 'lucide-react';
-import { Ticket } from '../../types';
+import { Plus, Search, Filter, Inbox, User, Clock, AlertTriangle, CheckCircle, MessageSquare, Phone, Mail, Calendar, Tag, Eye, CreditCard as Edit, Archive, Star, Flag, Users, Target, Award, TrendingUp, Zap, MoreVertical, ArrowLeft, Save, X, Trash2, Play } from 'lucide-react';
+import { Ticket } from '../../types/tasks';
 import { tasksStorage } from '../../utils/tasksStorage';
 import toast from 'react-hot-toast';
 

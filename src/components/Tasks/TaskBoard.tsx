@@ -1,31 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import {
-  Plus,
-  Search,
-  Filter,
-  MoreVertical,
-  Clock,
-  Users,
-  Flag,
-  MessageSquare,
-  Paperclip,
-  Eye,
-  Edit,
-  Play,
-  Pause,
-  CheckCircle,
-  AlertTriangle,
-  Calendar,
-  Target,
-  Award,
-  TrendingUp,
-  Zap,
-  Settings,
-  RotateCcw,
-  Mail,
-  Phone
-} from 'lucide-react';
-import { Task, TaskColumn } from '../../types';
+import { Plus, Search, Filter, MoreVertical, Clock, Users, Flag, MessageSquare, Paperclip, Eye, CreditCard as Edit, Play, Pause, CheckCircle, AlertTriangle, Calendar, Target, Award, TrendingUp, Zap, Settings, RotateCcw, Mail, Phone } from 'lucide-react';
+import { Task, TaskColumn } from '../../types/tasks';
 import { tasksStorage } from '../../utils/tasksStorage';
 import toast from 'react-hot-toast';
 
