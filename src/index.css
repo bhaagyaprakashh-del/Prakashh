@@ -49,4 +49,13 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+  
+  /* Performance optimizations */
+  .will-change-transform {
+    will-change: transform;
+  }
+  
+  .contain-layout {
+    contain: layout;
+  }
 }
