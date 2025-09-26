@@ -27,7 +27,7 @@ import {
   Download,
   Upload
 } from 'lucide-react';
-import { Task } from '../../types/tasks';
+import { Task } from '../../types';
 import { tasksStorage } from '../../utils/tasksStorage';
 import toast from 'react-hot-toast';
 

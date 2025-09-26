@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useEffect } from 'react';
 import {
   Plus,
   Search,
@@ -23,9 +24,14 @@ import {
   Award,
   TrendingUp,
   Zap,
-  MoreVertical
+  MoreVertical,
+  ArrowLeft,
+  Save,
+  X,
+  Trash2,
+  Play
 } from 'lucide-react';
-import { Ticket } from '../../types/tasks';
+import { Ticket } from '../../types';
 import { tasksStorage } from '../../utils/tasksStorage';
 import toast from 'react-hot-toast';
 

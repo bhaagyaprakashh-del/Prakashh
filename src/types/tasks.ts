@@ -200,5 +200,3 @@ export interface TaskColumn {
   limit?: number;
   isCompleted: boolean;
 }
-
-export const __DUMMY_EXPORT__ = true;

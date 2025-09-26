@@ -25,7 +25,7 @@ import {
   Mail,
   Phone
 } from 'lucide-react';
-import { Task, TaskColumn } from '../../types/tasks';
+import { Task, TaskColumn } from '../../types';
 import { tasksStorage } from '../../utils/tasksStorage';
 import toast from 'react-hot-toast';
 

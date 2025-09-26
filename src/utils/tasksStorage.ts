@@ -1,4 +1,4 @@
-import { Task, Ticket } from '../types/tasks';
+import { Task, Ticket } from '../types';
 
 const TASKS_STORAGE_KEY = 'crm_tasks';
 const TICKETS_STORAGE_KEY = 'crm_tickets';
