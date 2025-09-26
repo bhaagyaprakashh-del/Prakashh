@@ -7,6 +7,7 @@ import { LogoutPage } from './pages/LogoutPage';
 import { UserSettingsPage } from './pages/UserSettingsPage';
 import { AuctionsPage } from './components/Auctions/AuctionsPage';
 import { UsersPage } from './components/Users/UsersPage';
+import { KanbanBoard } from './components/Kanban/KanbanBoard';
 import { AppHeader } from './components/Header/AppHeader';
 import { AppSidebar } from './components/Sidebar/AppSidebar';
 import './styles/scrollbar.css';
@@ -20,6 +21,8 @@ const MainLayout: React.FC = () => {
         return <AuctionsPage />;
       case 'users':
         return <UsersPage />;
+      case 'leads-kanban':
+        return <KanbanBoard />;
       default:
         return <AuctionsPage />;
     }
