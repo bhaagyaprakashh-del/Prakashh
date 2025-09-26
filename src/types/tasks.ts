@@ -202,3 +202,6 @@ export interface TaskColumn {
 }
 
 export const __DUMMY_EXPORT__ = true;
+
+// Explicit type exports to ensure proper module resolution
+export type { Ticket };
