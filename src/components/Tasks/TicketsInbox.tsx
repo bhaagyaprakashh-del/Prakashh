@@ -25,7 +25,7 @@ import {
   Zap,
   MoreVertical
 } from 'lucide-react';
-import { Ticket } from '../../types/tasks';
+import { Ticket } from '../../types';
 import { tasksStorage } from '../../utils/tasksStorage';
 import toast from 'react-hot-toast';
 
