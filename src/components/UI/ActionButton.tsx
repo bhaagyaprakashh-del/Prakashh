@@ -13,7 +13,7 @@ interface ActionButtonProps {
   className?: string;
   disabled?: boolean;
   isLoading?: boolean;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   variant?: 'primary' | 'secondary' | 'danger' | 'success';
   size?: 'sm' | 'md' | 'lg';
 }
@@ -69,11 +69,11 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
     disabled:opacity-50 disabled:cursor-not-allowed
   `;
 
-  const handleClick = () => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (disabled || isLoading) return;
     
     if (onClick) {
-      onClick();
+      onClick(event);
     }
   };
 
