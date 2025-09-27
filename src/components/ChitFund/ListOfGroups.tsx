@@ -1,33 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  Plus,
-  Search,
-  Edit,
-  Trash2,
-  Eye,
-  Users,
-  Calendar,
-  DollarSign,
-  TrendingUp,
-  CheckCircle,
-  Clock,
-  AlertTriangle,
-  Gavel,
-  Target,
-  Award,
-  Star,
-  Filter,
-  Download,
-  Upload,
-  MoreVertical,
-  Building,
-  User,
-  CreditCard,
-  Activity,
-  MapPin,
-  Phone,
-  Mail
-} from 'lucide-react';
+import { Plus, Search, CreditCard as Edit, Trash2, Eye, Users, Calendar, DollarSign, TrendingUp, CheckCircle, Clock, AlertTriangle, Gavel, Target, Award, Star, Filter, Download, Upload, MoreVertical, Building, User, CreditCard, Activity, MapPin, Phone, Mail } from 'lucide-react';
 import { ChitGroup } from '../../types/chit';
 import { ActionButton } from '../UI/ActionButton';
 import { ActionCard } from '../UI/ActionCard';

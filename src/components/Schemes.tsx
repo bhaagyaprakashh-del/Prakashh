@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, Edit, Trash2, Users, Calendar, DollarSign, TrendingUp } from 'lucide-react';
+import { Plus, Search, CreditCard as Edit, Trash2, Users, Calendar, DollarSign, TrendingUp } from 'lucide-react';
 import { ChitScheme } from '../types';
 import { storage } from '../utils/storage';
 import { calculateSchemeProgress, formatCurrency, formatDate } from '../utils/calculations';

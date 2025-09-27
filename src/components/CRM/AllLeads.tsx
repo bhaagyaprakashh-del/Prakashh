@@ -1,38 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import {
-  Plus,
-  Search,
-  Edit,
-  Trash2,
-  Eye,
-  Phone,
-  Mail,
-  Building,
-  Calendar,
-  DollarSign,
-  TrendingUp,
-  Users,
-  Target,
-  Award,
-  CheckCircle,
-  Clock,
-  AlertTriangle,
-  Filter,
-  Download,
-  Upload,
-  MoreVertical,
-  Star,
-  Tag,
-  MapPin,
-  Globe,
-  Zap
-} from 'lucide-react';
+import { Plus, Search, CreditCard as Edit, Trash2, Eye, Phone, Mail, Building, Calendar, DollarSign, TrendingUp, Users, Target, Award, CheckCircle, Clock, AlertTriangle, Filter, Download, Upload, MoreVertical, Star, Tag, MapPin, Globe, Zap } from 'lucide-react';
 import { Lead } from '../../types/crm';
 import { formatCurrency } from '../../utils/calculations';
-import { ActionButton } from '../UI/ActionButton';
-import { ActionCard } from '../UI/ActionCard';
-import { useActions } from '../../hooks/useActions';
-import toast from 'react-hot-toast';
 
 const sampleLeads: Lead[] = [
   {
@@ -76,28 +45,6 @@ export const AllLeads: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'cards' | 'table'>('table');
-  
-  const { isLoading, navigateTo } = useActions();
-
-  const handleViewLead = (leadId: string) => {
-    navigateTo(`/leads-360?id=${leadId}`);
-  };
-
-  const handleEditLead = (leadId: string) => {
-    navigateTo(`/leads-edit?id=${leadId}`);
-  };
-
-  const handleCallLead = (leadId: string) => {
-    toast.success('Initiating call...');
-  };
-
-  const handleEmailLead = (leadId: string) => {
-    toast.success('Opening email client...');
-  };
-
-  const handleAddLead = () => {
-    navigateTo('/leads-new');
-  };
 
   const filteredLeads = useMemo(() => leads.filter(lead => {
     const matchesSearch = lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -148,14 +95,10 @@ export const AllLeads: React.FC = () => {
             <Download className="h-4 w-4 mr-2" />
             Export
           </button>
-          <ActionButton
-            action="add-lead"
-            onClick={handleAddLead}
-            variant="primary"
-          >
+          <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-all">
             <Plus className="h-4 w-4 mr-2" />
             Add Lead
-          </ActionButton>
+          </button>
         </div>
       </div>
 
@@ -352,46 +295,18 @@ export const AllLeads: React.FC = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">
-                          <ActionButton
-                            action="view-lead"
-                            id={lead.id}
-                            onClick={() => handleViewLead(lead.id)}
-                            variant="secondary"
-                            size="sm"
-                            className="p-1"
-                          >
+                          <button className="text-blue-400 hover:text-blue-300">
                             <Eye className="h-4 w-4" />
-                          </ActionButton>
-                          <ActionButton
-                            action="call-lead"
-                            id={lead.id}
-                            onClick={() => handleCallLead(lead.id)}
-                            variant="success"
-                            size="sm"
-                            className="p-1"
-                          >
+                          </button>
+                          <button className="text-green-400 hover:text-green-300">
                             <Phone className="h-4 w-4" />
-                          </ActionButton>
-                          <ActionButton
-                            action="email-lead"
-                            id={lead.id}
-                            onClick={() => handleEmailLead(lead.id)}
-                            variant="secondary"
-                            size="sm"
-                            className="p-1"
-                          >
+                          </button>
+                          <button className="text-purple-400 hover:text-purple-300">
                             <Mail className="h-4 w-4" />
-                          </ActionButton>
-                          <ActionButton
-                            action="edit-lead"
-                            id={lead.id}
-                            onClick={() => handleEditLead(lead.id)}
-                            variant="secondary"
-                            size="sm"
-                            className="p-1"
-                          >
+                          </button>
+                          <button className="text-orange-400 hover:text-orange-300">
                             <Edit className="h-4 w-4" />
-                          </ActionButton>
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -403,13 +318,7 @@ export const AllLeads: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredLeads.map((lead) => (
-              <ActionCard 
-                key={lead.id} 
-                action="view-lead"
-                id={lead.id}
-                onClick={() => handleViewLead(lead.id)}
-                className="p-6"
-              >
+              <div key={lead.id} className="bg-slate-800/40 backdrop-blur-xl rounded-2xl p-6 border border-yellow-400/30">
                 <h3 className="text-lg font-semibold text-slate-50 mb-2">{lead.name}</h3>
                 <p className="text-sm text-slate-400 mb-4">{lead.company}</p>
                 <div className="space-y-2">
@@ -417,7 +326,7 @@ export const AllLeads: React.FC = () => {
                   <p className="text-sm text-slate-300">{lead.phone}</p>
                   <p className="text-lg font-bold text-green-400">{formatCurrency(lead.value)}</p>
                 </div>
-              </ActionCard>
+              </div>
             ))}
           </div>
         )}
