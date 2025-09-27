@@ -44,6 +44,7 @@ const sampleLeads: Lead[] = [
 ];
 
 export const AllLeads: React.FC = () => {
+  const { navigateTo } = useActions();
   const [leads] = useState<Lead[]>(sampleLeads);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
