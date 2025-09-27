@@ -130,8 +130,8 @@ const SidebarItem: React.FC<{
   const itemClasses = `
     group flex items-center w-full text-left ${isCollapsed ? 'px-2 py-3 justify-center' : 'px-4 py-3'} text-sm font-medium rounded-xl transition-all duration-200 mb-2 border
     ${isActive 
-      ? 'bg-transparent text-blue-400 border-yellow-400/70 backdrop-blur-sm shadow-lg' 
-      : 'bg-transparent text-slate-300 hover:text-slate-50 border-yellow-400/30 hover:border-yellow-400/50 backdrop-blur-sm'
+      ? 'bg-transparent text-blue-400 border-yellow-400/60 backdrop-blur-sm shadow-lg' 
+      : 'bg-transparent text-slate-300 hover:text-slate-50 border-yellow-400/40 hover:border-yellow-400/60 backdrop-blur-sm'
     }
   `;
 
