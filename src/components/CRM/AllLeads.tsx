@@ -2,6 +2,9 @@ import React, { useState, useMemo } from 'react';
 import { Plus, Search, CreditCard as Edit, Trash2, Eye, Phone, Mail, Building, Calendar, DollarSign, TrendingUp, Users, Target, Award, CheckCircle, Clock, AlertTriangle, Filter, Download, Upload, MoreVertical, Star, Tag, MapPin, Globe, Zap } from 'lucide-react';
 import { Lead } from '../../types/crm';
 import { formatCurrency } from '../../utils/calculations';
+import { ActionButton } from '../UI/ActionButton';
+import { ActionCard } from '../UI/ActionCard';
+import { useActions } from '../../hooks/useActions';
 
 const sampleLeads: Lead[] = [
   {
