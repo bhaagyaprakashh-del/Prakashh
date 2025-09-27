@@ -71,16 +71,16 @@ const FlyoutPanel: React.FC<FlyoutPanelProps> = ({ item, isOpen, onClose, positi
                 target={`/${subPage.id}`}
                 onClick={() => handleSubPageClick(subPage.id)}
                 variant="secondary"
-                className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all group border-0 ${
+                className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all group border ${
                   isActive 
-                    ? 'bg-blue-500/20 text-blue-400 border border-yellow-400/50' 
-                    : 'text-slate-300 hover:bg-slate-700/50 hover:text-slate-50 bg-transparent hover:border-yellow-400/30'
+                    ? 'bg-blue-500/20 text-blue-400 border-yellow-400/70' 
+                    : 'text-slate-300 hover:bg-slate-700/50 hover:text-slate-50 bg-transparent border-yellow-400/30 hover:border-yellow-400/50'
                 }`}
               >
                 <div className={`p-2 rounded-lg transition-all ${
                   isActive 
-                    ? 'bg-blue-500/30 border border-yellow-400/40' 
-                    : 'bg-slate-700/50 border border-yellow-400/20 group-hover:bg-slate-600/50'
+                    ? 'bg-blue-500/30 border border-yellow-400/50' 
+                    : 'bg-slate-700/50 border border-yellow-400/30 group-hover:bg-slate-600/50 group-hover:border-yellow-400/40'
                 }`}>
                   <SubIcon className={`h-4 w-4 ${isActive ? 'text-blue-400' : 'text-slate-400 group-hover:text-slate-300'}`} />
                 </div>
@@ -128,10 +128,10 @@ const SidebarItem: React.FC<{
   };
 
   const itemClasses = `
-    group flex items-center w-full text-left ${isCollapsed ? 'px-2 py-3 justify-center' : 'px-4 py-3'} text-sm font-medium rounded-xl transition-all duration-200 mb-2
+    group flex items-center w-full text-left ${isCollapsed ? 'px-2 py-3 justify-center' : 'px-4 py-3'} text-sm font-medium rounded-xl transition-all duration-200 mb-2 border
     ${isActive 
-      ? 'bg-blue-500/20 text-blue-400 border border-yellow-400/50 backdrop-blur-sm shadow-lg' 
-      : 'text-slate-300 hover:bg-slate-700/50 hover:text-slate-50 border border-yellow-400/20 hover:border-yellow-400/40 backdrop-blur-sm'
+      ? 'bg-blue-500/20 text-blue-400 border-yellow-400/70 backdrop-blur-sm shadow-lg' 
+      : 'text-slate-300 hover:bg-slate-700/50 hover:text-slate-50 border-yellow-400/30 hover:border-yellow-400/50 backdrop-blur-sm'
     }
   `;
 
