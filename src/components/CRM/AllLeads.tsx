@@ -91,14 +91,23 @@ export const AllLeads: React.FC = () => {
           </p>
         </div>
         <div className="flex space-x-3">
-          <button className="inline-flex items-center px-4 py-2 border border-yellow-400/30 text-sm font-medium rounded-lg text-slate-50 bg-slate-700/50 hover:bg-slate-700 transition-all backdrop-blur-sm">
+          <ActionButton
+            action="export-leads"
+            variant="secondary"
+            className="inline-flex items-center px-4 py-2 border border-yellow-400/30 text-sm font-medium rounded-lg text-slate-50 bg-slate-700/50 hover:bg-slate-700 transition-all backdrop-blur-sm"
+          >
             <Download className="h-4 w-4 mr-2" />
             Export
-          </button>
-          <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-all">
+          </ActionButton>
+          <ActionButton
+            action="add-lead"
+            onClick={() => navigateTo('/leads-new')}
+            variant="primary"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-all"
+          >
             <Plus className="h-4 w-4 mr-2" />
             Add Lead
-          </button>
+          </ActionButton>
         </div>
       </div>
 
