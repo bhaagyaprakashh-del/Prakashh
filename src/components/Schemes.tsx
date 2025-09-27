@@ -4,13 +4,24 @@ import { ChitScheme } from '../types';
 import { storage } from '../utils/storage';
 import { calculateSchemeProgress, formatCurrency, formatDate } from '../utils/calculations';
 import { SchemeForm } from './SchemeForm';
+import { ActionButton } from './UI/ActionButton';
+import { ActionCard } from './UI/ActionCard';
+import { Modal } from './UI/Modal';
+import { ConfirmDialog } from './UI/ConfirmDialog';
+import { useModal } from '../hooks/useModal';
+import { useActions } from '../hooks/useActions';
+import toast from 'react-hot-toast';
 
 export const Schemes: React.FC = () => {
   const [schemes, setSchemes] = useState<ChitScheme[]>(storage.getSchemes());
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedScheme, setSelectedScheme] = useState<ChitScheme | null>(null);
-  const [showForm, setShowForm] = useState(false);
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  
+  const { isLoading } = useActions();
+  const formModal = useModal();
+  const confirmModal = useModal();
+  const [schemeToDelete, setSchemeToDelete] = useState<ChitScheme | null>(null);
 
   const filteredSchemes = schemes.filter(scheme => {
     const matchesSearch = scheme.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -20,18 +31,26 @@ export const Schemes: React.FC = () => {
 
   const handleAddScheme = () => {
     setSelectedScheme(null);
-    setShowForm(true);
+    formModal.openModal();
   };
 
   const handleEditScheme = (scheme: ChitScheme) => {
     setSelectedScheme(scheme);
-    setShowForm(true);
+    formModal.openModal(scheme);
   };
 
-  const handleDeleteScheme = (schemeId: string) => {
-    if (window.confirm('Are you sure you want to delete this scheme?')) {
-      storage.deleteScheme(schemeId);
+  const handleDeleteScheme = (scheme: ChitScheme) => {
+    setSchemeToDelete(scheme);
+    confirmModal.openModal();
+  };
+
+  const confirmDelete = () => {
+    if (schemeToDelete) {
+      storage.deleteScheme(schemeToDelete.id);
       setSchemes(storage.getSchemes());
+      toast.success('Scheme deleted successfully');
+      confirmModal.closeModal();
+      setSchemeToDelete(null);
     }
   };
 
@@ -56,7 +75,8 @@ export const Schemes: React.FC = () => {
       storage.addScheme(newScheme);
     }
     setSchemes(storage.getSchemes());
-    setShowForm(false);
+    formModal.closeModal();
+    toast.success(selectedScheme ? 'Scheme updated successfully' : 'Scheme created successfully');
   };
 
   const getStatusColor = (status: string) => {
@@ -68,18 +88,9 @@ export const Schemes: React.FC = () => {
     }
   };
 
-  if (showForm) {
-    return (
-      <SchemeForm
-        scheme={selectedScheme}
-        onSubmit={handleFormSubmit}
-        onCancel={() => setShowForm(false)}
-      />
-    );
-  }
-
   return (
-    <div className="space-y-6">
+    <>
+      <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Chit Schemes</h1>
@@ -87,13 +98,14 @@ export const Schemes: React.FC = () => {
             Manage your chit fund schemes and track their progress
           </p>
         </div>
-        <button
+        <ActionButton
+          action="create-scheme"
           onClick={handleAddScheme}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+          variant="primary"
         >
           <Plus className="h-4 w-4 mr-2" />
           Create Scheme
-        </button>
+        </ActionButton>
       </div>
 
       {/* Filters and Search */}
@@ -133,7 +145,12 @@ export const Schemes: React.FC = () => {
           const schemeMembers = members.filter(m => scheme.members.includes(m.id));
           
           return (
-            <div key={scheme.id} className="bg-white shadow rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
+            <ActionCard 
+              key={scheme.id} 
+              className="bg-white shadow rounded-lg overflow-hidden p-0"
+              action="view-scheme"
+              id={scheme.id}
+            >
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-gray-900 truncate">{scheme.name}</h3>
@@ -216,21 +233,29 @@ export const Schemes: React.FC = () => {
                 </div>
 
                 <div className="mt-4 flex justify-end space-x-2">
-                  <button
+                  <ActionButton
+                    action="edit-scheme"
+                    id={scheme.id}
                     onClick={() => handleEditScheme(scheme)}
-                    className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors duration-200"
+                    variant="secondary"
+                    size="sm"
+                    className="p-2"
                   >
                     <Edit className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteScheme(scheme.id)}
-                    className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors duration-200"
+                  </ActionButton>
+                  <ActionButton
+                    action="delete-scheme"
+                    id={scheme.id}
+                    onClick={() => handleDeleteScheme(scheme)}
+                    variant="danger"
+                    size="sm"
+                    className="p-2"
                   >
                     <Trash2 className="h-4 w-4" />
-                  </button>
+                  </ActionButton>
                 </div>
               </div>
-            </div>
+            </ActionCard>
           );
         })}
       </div>
@@ -244,6 +269,34 @@ export const Schemes: React.FC = () => {
           </div>
         </div>
       )}
-    </div>
+      </div>
+
+      {/* Add/Edit Scheme Modal */}
+      <Modal
+        isOpen={formModal.isOpen}
+        onClose={formModal.closeModal}
+        title={selectedScheme ? 'Edit Scheme' : 'Create New Scheme'}
+        size="lg"
+      >
+        <SchemeForm
+          scheme={selectedScheme}
+          onSubmit={handleFormSubmit}
+          onCancel={formModal.closeModal}
+        />
+      </Modal>
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={confirmModal.isOpen}
+        onClose={confirmModal.closeModal}
+        onConfirm={confirmDelete}
+        title="Delete Scheme"
+        message={`Are you sure you want to delete "${schemeToDelete?.name}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        type="danger"
+        isLoading={isLoading['delete-scheme']}
+      />
+    </>
   );
 };

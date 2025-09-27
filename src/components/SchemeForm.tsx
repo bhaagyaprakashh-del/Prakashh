@@ -298,20 +298,21 @@ export const SchemeForm: React.FC<SchemeFormProps> = ({ scheme, onSubmit, onCanc
         </div>
 
         <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
-          <button
-            type="button"
+          <ActionButton
+            action="cancel"
             onClick={onCancel}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+            variant="secondary"
           >
             Cancel
-          </button>
-          <button
+          </ActionButton>
+          <ActionButton
+            action="submit-form"
             type="submit"
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+            variant="primary"
           >
             <Save className="h-4 w-4 mr-2" />
             {scheme ? 'Update Scheme' : 'Create Scheme'}
-          </button>
+          </ActionButton>
         </div>
       </form>
     </div>

@@ -29,6 +29,10 @@ import {
   Mail
 } from 'lucide-react';
 import { ChitGroup } from '../../types/chit';
+import { ActionButton } from '../UI/ActionButton';
+import { ActionCard } from '../UI/ActionCard';
+import { useActions } from '../../hooks/useActions';
+import toast from 'react-hot-toast';
 
 const sampleGroups: ChitGroup[] = [
   {
@@ -274,9 +278,28 @@ const GroupCard: React.FC<{ group: ChitGroup }> = React.memo(({ group }) => {
   const defaulters = group.members.filter(m => m.status === 'defaulter').length;
   const totalCollected = group.members.reduce((sum, m) => sum + m.totalPaid, 0);
   const pendingCollection = group.members.reduce((sum, m) => sum + m.totalDue, 0);
+  
+  const { navigateTo } = useActions();
+
+  const handleViewGroup = () => {
+    navigateTo(`/chit-360?id=${group.id}`);
+  };
+
+  const handleConductAuction = () => {
+    navigateTo(`/auction?groupId=${group.id}`);
+  };
+
+  const handleEditGroup = () => {
+    navigateTo(`/chit-edit?id=${group.id}`);
+  };
 
   return (
-    <div className="bg-slate-800/40 backdrop-blur-xl rounded-2xl p-6 border border-yellow-400/30 hover:border-yellow-400/50 transition-all">
+    <ActionCard 
+      action="view-group"
+      id={group.id}
+      onClick={handleViewGroup}
+      className="p-6"
+    >
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-3">
           <div className="p-3 bg-blue-500/20 rounded-xl border border-yellow-400/30">
@@ -374,21 +397,49 @@ const GroupCard: React.FC<{ group: ChitGroup }> = React.memo(({ group }) => {
           <span>Updated {new Date(group.updatedAt).toLocaleDateString()}</span>
         </div>
         <div className="flex space-x-2">
-          <button className="p-2 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all">
+          <ActionButton
+            action="view-group"
+            id={group.id}
+            onClick={handleViewGroup}
+            variant="secondary"
+            size="sm"
+            className="p-2"
+          >
             <Eye className="h-4 w-4" />
-          </button>
-          <button className="p-2 text-slate-400 hover:text-purple-400 hover:bg-purple-500/10 rounded-lg transition-all">
+          </ActionButton>
+          <ActionButton
+            action="conduct-auction"
+            id={group.id}
+            onClick={handleConductAuction}
+            variant="secondary"
+            size="sm"
+            className="p-2"
+          >
             <Gavel className="h-4 w-4" />
-          </button>
-          <button className="p-2 text-slate-400 hover:text-green-400 hover:bg-green-500/10 rounded-lg transition-all">
+          </ActionButton>
+          <ActionButton
+            action="edit-group"
+            id={group.id}
+            onClick={handleEditGroup}
+            variant="secondary"
+            size="sm"
+            className="p-2"
+          >
             <Edit className="h-4 w-4" />
-          </button>
-          <button className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all">
+          </ActionButton>
+          <ActionButton
+            action="delete-group"
+            id={group.id}
+            confirm="Are you sure you want to delete this group?"
+            variant="danger"
+            size="sm"
+            className="p-2"
+          >
             <Trash2 className="h-4 w-4" />
-          </button>
+          </ActionButton>
         </div>
       </div>
-    </div>
+    </ActionCard>
   );
 });
 
@@ -495,6 +546,12 @@ export const ListOfGroups: React.FC = () => {
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterBranch, setFilterBranch] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
+  
+  const { navigateTo } = useActions();
+
+  const handleCreateGroup = () => {
+    navigateTo('/chit-create');
+  };
 
   const filteredGroups = useMemo(() => groups.filter(group => {
     const matchesSearch = group.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -549,10 +606,14 @@ export const ListOfGroups: React.FC = () => {
             <Download className="h-4 w-4 mr-2" />
             Export
           </button>
-          <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-all">
+          <ActionButton
+            action="create-group"
+            onClick={handleCreateGroup}
+            variant="primary"
+          >
             <Plus className="h-4 w-4 mr-2" />
             Create Group
-          </button>
+          </ActionButton>
         </div>
       </div>
 

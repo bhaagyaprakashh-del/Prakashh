@@ -35,6 +35,9 @@ import {
   XCircle
 } from 'lucide-react';
 
+import { ActionButton } from '../UI/ActionButton';
+import { ActionCard } from '../UI/ActionCard';
+import { useActions } from '../../hooks/useActions';
 const StatCard: React.FC<{
   title: string;
   value: string;
@@ -44,7 +47,7 @@ const StatCard: React.FC<{
   changeType?: 'positive' | 'negative';
 }> = ({ title, value, icon: Icon, color, change, changeType }) => {
   return (
-    <div className="bg-slate-800/40 backdrop-blur-xl rounded-2xl p-6 border border-yellow-400/30 hover:border-yellow-400/50 transition-all">
+    <ActionCard className="p-6" hoverable={false}>
       <div className="flex items-center justify-between">
         <div>
           <p className="text-slate-400 text-sm mb-1">{title}</p>
@@ -59,7 +62,7 @@ const StatCard: React.FC<{
           <Icon className={`h-8 w-8 ${color.replace('bg-', 'text-')}`} />
         </div>
       </div>
-    </div>
+    </ActionCard>
   );
 };
 
@@ -69,7 +72,7 @@ const ChartCard: React.FC<{
   children: React.ReactNode;
 }> = ({ title, icon: Icon, children }) => {
   return (
-    <div className="bg-slate-800/40 backdrop-blur-xl rounded-2xl p-6 border border-yellow-400/30">
+    <ActionCard className="p-6" hoverable={false}>
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-slate-50 text-lg font-semibold flex items-center">
           <Icon className="h-5 w-5 mr-2 text-blue-400" />
@@ -80,7 +83,7 @@ const ChartCard: React.FC<{
         </button>
       </div>
       {children}
-    </div>
+    </ActionCard>
   );
 };
 
@@ -270,6 +273,11 @@ const UserActivityCard: React.FC<{
 
 export const DashboardHome: React.FC<{ onPageChange: (page: string) => void }> = ({ onPageChange }) => {
   const [selectedPeriod, setSelectedPeriod] = useState('today');
+  const { navigateTo } = useActions();
+
+  const handleQuickAction = (page: string) => {
+    navigateTo(`/${page}`);
+  };
 
   // Sample data
   const todayActions = [
@@ -612,15 +620,17 @@ export const DashboardHome: React.FC<{ onPageChange: (page: string) => void }> =
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-slate-800/40 backdrop-blur-xl rounded-2xl p-6 border border-yellow-400/30">
+        <ActionCard className="p-6" hoverable={false}>
           <h3 className="text-slate-50 text-lg font-semibold mb-6 flex items-center">
             <Zap className="h-5 w-5 mr-2 text-yellow-400" />
             Quick Actions
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <button
-              onClick={() => onPageChange('leads-new')}
-              className="flex items-center space-x-3 p-4 bg-slate-700/30 hover:bg-slate-700/50 rounded-xl border border-yellow-400/20 hover:border-yellow-400/40 transition-all group"
+            <ActionCard
+              action="navigate"
+              target="/leads-new"
+              onClick={() => handleQuickAction('leads-new')}
+              className="flex items-center space-x-3 p-4"
             >
               <div className="p-3 bg-blue-500/20 rounded-lg border border-yellow-400/30 group-hover:bg-blue-500/30 transition-all">
                 <Plus className="h-6 w-6 text-blue-400" />
@@ -629,11 +639,13 @@ export const DashboardHome: React.FC<{ onPageChange: (page: string) => void }> =
                 <p className="text-slate-50 font-medium">Add New Lead</p>
                 <p className="text-slate-400 text-sm">Capture new prospects</p>
               </div>
-            </button>
+            </ActionCard>
 
-            <button
-              onClick={() => onPageChange('chit-create')}
-              className="flex items-center space-x-3 p-4 bg-slate-700/30 hover:bg-slate-700/50 rounded-xl border border-yellow-400/20 hover:border-yellow-400/40 transition-all group"
+            <ActionCard
+              action="navigate"
+              target="/chit-create"
+              onClick={() => handleQuickAction('chit-create')}
+              className="flex items-center space-x-3 p-4"
             >
               <div className="p-3 bg-green-500/20 rounded-lg border border-yellow-400/30 group-hover:bg-green-500/30 transition-all">
                 <CreditCard className="h-6 w-6 text-green-400" />
@@ -642,11 +654,13 @@ export const DashboardHome: React.FC<{ onPageChange: (page: string) => void }> =
                 <p className="text-slate-50 font-medium">Create Chit Group</p>
                 <p className="text-slate-400 text-sm">Start new group</p>
               </div>
-            </button>
+            </ActionCard>
 
-            <button
-              onClick={() => onPageChange('subscribers-new')}
-              className="flex items-center space-x-3 p-4 bg-slate-700/30 hover:bg-slate-700/50 rounded-xl border border-yellow-400/20 hover:border-yellow-400/40 transition-all group"
+            <ActionCard
+              action="navigate"
+              target="/subscribers-new"
+              onClick={() => handleQuickAction('subscribers-new')}
+              className="flex items-center space-x-3 p-4"
             >
               <div className="p-3 bg-purple-500/20 rounded-lg border border-yellow-400/30 group-hover:bg-purple-500/30 transition-all">
                 <User className="h-6 w-6 text-purple-400" />
@@ -655,11 +669,13 @@ export const DashboardHome: React.FC<{ onPageChange: (page: string) => void }> =
                 <p className="text-slate-50 font-medium">Add Subscriber</p>
                 <p className="text-slate-400 text-sm">Onboard new member</p>
               </div>
-            </button>
+            </ActionCard>
 
-            <button
-              onClick={() => onPageChange('reports-dashboard')}
-              className="flex items-center space-x-3 p-4 bg-slate-700/30 hover:bg-slate-700/50 rounded-xl border border-yellow-400/20 hover:border-yellow-400/40 transition-all group"
+            <ActionCard
+              action="navigate"
+              target="/reports-dashboard"
+              onClick={() => handleQuickAction('reports-dashboard')}
+              className="flex items-center space-x-3 p-4"
             >
               <div className="p-3 bg-orange-500/20 rounded-lg border border-yellow-400/30 group-hover:bg-orange-500/30 transition-all">
                 <BarChart3 className="h-6 w-6 text-orange-400" />
@@ -668,9 +684,9 @@ export const DashboardHome: React.FC<{ onPageChange: (page: string) => void }> =
                 <p className="text-slate-50 font-medium">Generate Report</p>
                 <p className="text-slate-400 text-sm">Business analytics</p>
               </div>
-            </button>
+            </ActionCard>
           </div>
-        </div>
+        </ActionCard>
       </div>
     </div>
   );

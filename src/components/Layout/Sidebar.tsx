@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Search, ChevronRight } from 'lucide-react';
 import { NavigationItem, navigation } from '../../config/navigation';
+import { ActionButton } from '../UI/ActionButton';
+import { useActions } from '../../hooks/useActions';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -18,11 +20,12 @@ interface FlyoutPanelProps {
 const FlyoutPanel: React.FC<FlyoutPanelProps> = ({ item, isOpen, onClose, position }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { navigateTo } = useActions();
 
   if (!isOpen || !item.children) return null;
 
   const handleSubPageClick = (subPageId: string) => {
-    navigate(`/${subPageId}`);
+    navigateTo(`/${subPageId}`);
     onClose();
   };
 
@@ -62,13 +65,16 @@ const FlyoutPanel: React.FC<FlyoutPanelProps> = ({ item, isOpen, onClose, positi
             const isActive = currentPath === subPage.id;
             
             return (
-              <button
+              <ActionButton
                 key={subPage.id}
+                action="navigate"
+                target={`/${subPage.id}`}
                 onClick={() => handleSubPageClick(subPage.id)}
-                className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all group ${
+                variant="secondary"
+                className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all group border-0 ${
                   isActive 
                     ? 'bg-blue-500/20 text-blue-400 border border-yellow-400/50' 
-                    : 'text-slate-300 hover:bg-slate-700/50 hover:text-slate-50 border border-transparent hover:border-yellow-400/30'
+                    : 'text-slate-300 hover:bg-slate-700/50 hover:text-slate-50 bg-transparent hover:border-yellow-400/30'
                 }`}
               >
                 <div className={`p-2 rounded-lg transition-all ${
@@ -84,7 +90,7 @@ const FlyoutPanel: React.FC<FlyoutPanelProps> = ({ item, isOpen, onClose, positi
                 <ChevronRight className={`h-4 w-4 transition-all ${
                   isActive ? 'text-blue-400' : 'text-slate-500 group-hover:text-slate-300'
                 }`} />
-              </button>
+              </ActionButton>
             );
           })}
         </div>
@@ -100,6 +106,7 @@ const SidebarItem: React.FC<{
 }> = ({ item, isCollapsed, onOpenFlyout }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { navigateTo } = useActions();
   
   const Icon = item.icon;
   const currentPath = location.pathname.slice(1);
@@ -116,7 +123,7 @@ const SidebarItem: React.FC<{
       onOpenFlyout(item, position);
     } else {
       // Direct navigation for modules without children
-      navigate(`/${item.id}`);
+      navigateTo(`/${item.id}`);
     }
   };
 
@@ -134,7 +141,14 @@ const SidebarItem: React.FC<{
   `;
 
   return (
-    <button onClick={handleClick} className={itemClasses} title={isCollapsed ? item.name : undefined}>
+    <ActionButton
+      action={item.children ? "open-flyout" : "navigate"}
+      target={item.children ? undefined : `/${item.id}`}
+      onClick={handleClick}
+      className={`${itemClasses} border-0`}
+      variant="secondary"
+      title={isCollapsed ? item.name : undefined}
+    >
       <Icon className={iconClasses} />
       {!isCollapsed && (
         <>
@@ -146,7 +160,7 @@ const SidebarItem: React.FC<{
           )}
         </>
       )}
-    </button>
+    </ActionButton>
   );
 };
 

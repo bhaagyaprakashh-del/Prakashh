@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Save, User, Building, DollarSign, Tag, Calendar, Phone, Mail, Globe } from 'lucide-react';
 import { Lead } from '../../types/crm';
+import { ActionButton } from '../UI/ActionButton';
+import { useActions } from '../../hooks/useActions';
+import toast from 'react-hot-toast';
 
 interface NewLeadProps {
   onBack: () => void;
@@ -26,6 +29,7 @@ export const NewLead: React.FC<NewLeadProps> = ({ onBack, onSave }) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [newTag, setNewTag] = useState('');
   const [newNote, setNewNote] = useState('');
+  const { isLoading } = useActions();
 
   const sources = [
     { value: 'website', label: 'Website' },
@@ -88,6 +92,7 @@ export const NewLead: React.FC<NewLeadProps> = ({ onBack, onSave }) => {
         updatedAt: new Date().toISOString().split('T')[0]
       };
       onSave(leadData);
+      toast.success('Lead created successfully');
     }
   };
 
@@ -139,12 +144,15 @@ export const NewLead: React.FC<NewLeadProps> = ({ onBack, onSave }) => {
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-yellow-400/30 flex-shrink-0">
         <div className="flex items-center space-x-4">
-          <button
+          <ActionButton
+            action="navigate-back"
             onClick={onBack}
-            className="p-2 text-slate-400 hover:text-slate-50 hover:bg-slate-700/50 rounded-lg transition-all"
+            variant="secondary"
+            size="sm"
+            className="p-2"
           >
             <ArrowLeft className="h-5 w-5" />
-          </button>
+          </ActionButton>
           <div>
             <h1 className="text-2xl font-bold text-slate-50">Add New Lead</h1>
             <p className="mt-1 text-sm text-slate-400">
@@ -381,20 +389,22 @@ export const NewLead: React.FC<NewLeadProps> = ({ onBack, onSave }) => {
 
             {/* Form Actions */}
             <div className="flex justify-end space-x-3 pt-6 border-t border-yellow-400/20">
-              <button
-                type="button"
+              <ActionButton
+                action="cancel"
                 onClick={onBack}
-                className="px-6 py-2 text-sm font-medium text-slate-300 bg-slate-700/50 border border-yellow-400/30 rounded-lg hover:bg-slate-700 transition-all backdrop-blur-sm"
+                variant="secondary"
               >
                 Cancel
-              </button>
-              <button
+              </ActionButton>
+              <ActionButton
+                action="submit-form"
                 type="submit"
-                className="inline-flex items-center px-6 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg shadow-sm hover:bg-blue-700 transition-all"
+                variant="primary"
+                isLoading={isLoading['submit-form']}
               >
                 <Save className="h-4 w-4 mr-2" />
                 Save Lead
-              </button>
+              </ActionButton>
             </div>
           </form>
         </div>
