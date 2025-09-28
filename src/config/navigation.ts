@@ -129,7 +129,7 @@ export const navigation: NavigationItem[] = [
       { id: 'roles-permissions', name: 'Roles & Permissions', icon: Shield },
       { id: 'users', name: 'Users', icon: UserCheck },
       { id: 'products', name: 'Products', icon: CreditCard },
-      { id: 'templates', name: 'Templates / DMS', icon: FileText },
+      { id: 'templates-dms', name: 'Templates / DMS', icon: FileText },
       { id: 'audit-logs', name: 'Audit Logs & Error Log', icon: Activity }
     ]
   },

@@ -435,7 +435,7 @@ export const routes: AppRoute[] = [
     path: "/users", 
     key: "settings.users", 
     title: "User Management", 
-    element: React.createElement(UsersComponent), 
+    element: <UsersComponent />, 
     parent: "settings" 
   },
   { 
@@ -465,21 +465,21 @@ export const routes: AppRoute[] = [
     path: "/members", 
     key: "legacy.members", 
     title: "Members", 
-    element: React.createElement(LegacyMembers), 
+    element: <LegacyMembers />, 
     parent: "legacy" 
   },
   { 
     path: "/schemes", 
     key: "legacy.schemes", 
     title: "Schemes", 
-    element: React.createElement(LegacySchemes), 
+    element: <LegacySchemes />, 
     parent: "legacy" 
   },
   { 
     path: "/payments", 
     key: "legacy.payments", 
     title: "Payments", 
-    element: React.createElement(LegacyPayments), 
+    element: <LegacyPayments />, 
     parent: "legacy" 
   },
 
