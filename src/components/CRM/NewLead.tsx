@@ -87,6 +87,11 @@ export const NewLead: React.FC<NewLeadProps> = ({ onBack, onSave }) => {
         createdAt: new Date().toISOString().split('T')[0],
         updatedAt: new Date().toISOString().split('T')[0]
       };
+      // Save to localStorage for persistence
+      const existingLeads = JSON.parse(localStorage.getItem('crm_leads') || '[]');
+      existingLeads.push(leadData);
+      localStorage.setItem('crm_leads', JSON.stringify(existingLeads));
+      
       onSave(leadData);
     }
   };

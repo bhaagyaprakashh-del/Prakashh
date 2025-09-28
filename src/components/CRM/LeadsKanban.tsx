@@ -3,7 +3,19 @@ import { Plus, MoreVertical, Phone, Mail, Calendar, DollarSign, Users, Building,
 import { Lead } from '../../types/crm';
 import { formatCurrency } from '../../utils/calculations';
 
-const sampleLeads: Lead[] = [
+const getSampleLeads = (): Lead[] => {
+  // Get leads from localStorage if available, otherwise use sample data
+  const storedLeads = localStorage.getItem('crm_leads');
+  if (storedLeads) {
+    try {
+      return JSON.parse(storedLeads);
+    } catch (error) {
+      console.error('Error parsing stored leads:', error);
+    }
+  }
+  
+  // Return sample data if no stored leads
+  return [
   {
     id: '1',
     name: 'Rajesh Gupta',
@@ -105,7 +117,8 @@ const sampleLeads: Lead[] = [
     notes: ['Deal closed successfully'],
     tags: ['consultancy', 'closed-won']
   }
-];
+  ];
+};
 
 const statusColumns = [
   { id: 'new', title: 'New Leads', color: 'bg-blue-100 border-blue-300', count: 0 },
@@ -210,7 +223,17 @@ const LeadCard: React.FC<{ lead: Lead }> = ({ lead }) => {
 };
 
 export const LeadsKanban: React.FC = () => {
-  const [leads] = useState<Lead[]>(sampleLeads);
+  const [leads, setLeads] = useState<Lead[]>(() => getSampleLeads());
+
+  // Refresh leads data when localStorage changes
+  React.useEffect(() => {
+    const handleStorageChange = () => {
+      setLeads(getSampleLeads());
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const getLeadsByStatus = (status: string) => {
     return leads.filter(lead => lead.status === status);
@@ -244,7 +267,7 @@ export const LeadsKanban: React.FC = () => {
           </div>
           <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-all">
             <Plus className="h-4 w-4 mr-2" />
-            Add Lead
+            <a href="/leads-new" className="text-white no-underline">Add Lead</a>
           </button>
         </div>
       </div>

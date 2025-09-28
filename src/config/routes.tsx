@@ -121,7 +121,11 @@ export const routes: AppRoute[] = [
     path: "/leads-new", 
     key: "leads.new", 
     title: "Add New Lead", 
-    element: <NewLead onBack={() => window.history.back()} onSave={() => window.location.href = '/leads-all'} />, 
+    element: <NewLead onBack={() => window.history.back()} onSave={() => {
+      // Trigger a page refresh to show the new lead
+      window.dispatchEvent(new Event('storage'));
+      window.location.href = '/leads-all';
+    }} />, 
     parent: "leads" 
   },
   { 

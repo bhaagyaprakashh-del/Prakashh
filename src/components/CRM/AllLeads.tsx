@@ -30,7 +30,19 @@ import {
 import { Lead } from '../../types/crm';
 import { formatCurrency } from '../../utils/calculations';
 
-const sampleLeads: Lead[] = [
+const getSampleLeads = (): Lead[] => {
+  // Get leads from localStorage if available, otherwise use sample data
+  const storedLeads = localStorage.getItem('crm_leads');
+  if (storedLeads) {
+    try {
+      return JSON.parse(storedLeads);
+    } catch (error) {
+      console.error('Error parsing stored leads:', error);
+    }
+  }
+  
+  // Return sample data if no stored leads
+  return [
   {
     id: '1',
     name: 'Rajesh Gupta',
@@ -65,13 +77,34 @@ const sampleLeads: Lead[] = [
     tags: ['referral', 'individual'],
     nextFollowUp: '2024-03-17'
   }
-];
+  ];
+};
+
+const initializeLeadsData = () => {
+  const existingLeads = localStorage.getItem('crm_leads');
+  if (!existingLeads) {
+    localStorage.setItem('crm_leads', JSON.stringify(getSampleLeads()));
+  }
+};
 
 export const AllLeads: React.FC = () => {
-  const [leads] = useState<Lead[]>(sampleLeads);
+  const [leads, setLeads] = useState<Lead[]>(() => {
+    initializeLeadsData();
+    return getSampleLeads();
+  });
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'cards' | 'table'>('table');
+
+  // Refresh leads data when component mounts or when localStorage changes
+  React.useEffect(() => {
+    const handleStorageChange = () => {
+      setLeads(getSampleLeads());
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const filteredLeads = useMemo(() => leads.filter(lead => {
     const matchesSearch = lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -124,7 +157,7 @@ export const AllLeads: React.FC = () => {
           </button>
           <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-all">
             <Plus className="h-4 w-4 mr-2" />
-            Add Lead
+            <a href="/leads-new" className="text-white no-underline">Add Lead</a>
           </button>
         </div>
       </div>
