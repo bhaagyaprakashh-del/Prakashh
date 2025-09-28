@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, MoreVertical, Phone, Mail, Calendar, DollarSign, Users, Building, Tag, Eye, Edit } from 'lucide-react';
+import { Plus, MoreVertical, Phone, Mail, Calendar, DollarSign, Users, Building, Tag, Eye, CreditCard as Edit } from 'lucide-react';
 import { Lead } from '../../types/crm';
 import { formatCurrency } from '../../utils/calculations';
 
