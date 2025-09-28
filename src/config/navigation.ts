@@ -1,8 +1,4 @@
-import { 
-  Home, BarChart3, Target, Bell, Users, Kanban, Plus, Eye, TrendingUp, FileText, 
-  CheckSquare, Ticket, Clock, MessageSquare, Mail, Calendar, UserCheck, Building, 
-  Award, CreditCard, DollarSign, Upload, Settings, Palette, List, Edit, Shield, Activity
-} from 'lucide-react';
+import { Home, BarChart3, Target, Bell, Users, Kanban, Plus, Eye, TrendingUp, FileText, CheckSquare, Ticket, Clock, MessageSquare, Mail, Calendar, UserCheck, Building, Award, CreditCard, DollarSign, Upload, Settings, Palette, List, CreditCard as Edit, Shield, Activity } from 'lucide-react';
 
 export interface NavigationItem {
   id: string;
@@ -145,7 +141,8 @@ export const navigation: NavigationItem[] = [
       { id: 'custom-theme', name: 'Theme (Colors, Layout)', icon: Palette },
       { id: 'custom-sidebar', name: 'Sidebar Order & Visibility', icon: List },
       { id: 'custom-modules', name: 'Module Management', icon: Settings },
-      { id: 'custom-forms', name: 'Form Editor', icon: Edit }
+      { id: 'custom-forms', name: 'Form Editor', icon: Edit },
+      { id: 'custom-tables', name: 'Table Editor', icon: Settings }
     ]
   }
 ];

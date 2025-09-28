@@ -204,11 +204,8 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ isOpen, onClose }) =>
   };
 
   const handleLogout = () => {
-    toast.success('Logging out...');
-    // Simulate logout
-    setTimeout(() => {
-      navigateTo('/login');
-    }, 1000);
+    logout();
+    navigateTo('/login');
     onClose();
   };
 
