@@ -48,13 +48,6 @@ import { MyReports } from './components/Reports/MyReports';
 import { ScheduledReports } from './components/Reports/ScheduledReports';
 import { UploadsImport } from './components/Reports/UploadsImport';
 import { AllSubscribers } from './components/Subscribers/AllSubscribers';
-import { IntegrateOverview } from './components/Integrate/IntegrateOverview';
-import { DataSync } from './components/Integrate/DataSync';
-import { FieldMappings } from './components/Integrate/FieldMappings';
-import { UpdateConsole } from './components/Integrate/UpdateConsole';
-import { ConflictResolver } from './components/Integrate/ConflictResolver';
-import { IntegrateLogs } from './components/Integrate/IntegrateLogs';
-import { IntegrateSettings } from './components/Integrate/IntegrateSettings';
 import { NewSubscriber } from './components/Subscribers/NewSubscriber';
 import { Subscriber360 } from './components/Subscribers/Subscriber360';
 import { SubscribersReports } from './components/Subscribers/SubscribersReports';
@@ -152,13 +145,6 @@ function App() {
       'reports-my': { title: 'My Reports / Shared Reports', subtitle: 'Manage your personal reports and access shared team reports' },
       'reports-scheduled': { title: 'Scheduled Reports', subtitle: 'Manage automated report generation and delivery schedules' },
       'reports-uploads': { title: 'Uploads & Import Center', subtitle: 'Upload, validate, and import data from various sources with automated processing' },
-      'integrate-overview': { title: 'Integration Overview', subtitle: 'Central hub for data integration across all modules' },
-      'integrate-data-sync': { title: 'Data Sync', subtitle: 'One-click pull/push, incremental & full sync operations' },
-      'integrate-field-mappings': { title: 'Field Mappings', subtitle: 'Map source→target fields per module; save + load mappings' },
-      'integrate-update-console': { title: 'Update Console', subtitle: 'Bulk update wizard with preview & confirmation' },
-      'integrate-conflict-resolver': { title: 'Conflict Resolver', subtitle: 'Record-level diff/merge UI for data conflicts' },
-      'integrate-logs': { title: 'Integration Logs', subtitle: 'Runs, errors, warnings, durations, counts; filterable, exportable' },
-      'integrate-settings': { title: 'Integration Settings', subtitle: 'Toggle modules in scope, schedule, policies' },
       'subscribers-all': { title: 'All Subscribers (Table)', subtitle: 'Comprehensive subscriber management with detailed profiles and investment tracking' },
       'subscribers-new': { title: 'Add New Subscriber', subtitle: 'Create new subscriber profile with complete KYC and membership information' },
       'subscribers-360': { title: 'Subscriber 360 View', subtitle: 'Complete subscriber profile with schemes, payments, and activity timeline' },
@@ -237,13 +223,6 @@ function App() {
           <Route path="/reports-my" element={<MyReports />} />
           <Route path="/reports-scheduled" element={<ScheduledReports />} />
           <Route path="/reports-uploads" element={<UploadsImport />} />
-          <Route path="/integrate-overview" element={<IntegrateOverview />} />
-          <Route path="/integrate-data-sync" element={<DataSync />} />
-          <Route path="/integrate-field-mappings" element={<FieldMappings />} />
-          <Route path="/integrate-update-console" element={<UpdateConsole />} />
-          <Route path="/integrate-conflict-resolver" element={<ConflictResolver />} />
-          <Route path="/integrate-logs" element={<IntegrateLogs />} />
-          <Route path="/integrate-settings" element={<IntegrateSettings />} />
           <Route path="/company-profile-branding" element={<CompanyProfile />} />
           <Route path="/branches" element={<Branches />} />
           <Route path="/departments" element={<Departments />} />
