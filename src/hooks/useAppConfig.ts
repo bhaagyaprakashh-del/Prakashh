@@ -1,73 +1,6 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
+import { AppConfig, defaultConfig, validateConfig, mergeConfig } from '../lib/appConfig';
 
-export interface AppConfig {
-  theme: {
-    colors: {
-      primary: string;
-      secondary: string;
-      success: string;
-      warning: string;
-      danger: string;
-      surface: string;
-      text: string;
-    };
-    radius: 'none' | 'sm' | 'md' | 'lg' | 'xl';
-    density: 'compact' | 'comfortable' | 'spacious';
-    headerFixed: boolean;
-    sidebarCollapsed: boolean;
-    glassEffect: boolean;
-  };
-  sidebar: {
-    order: string[];
-    items: Array<{
-      id: string;
-      visible: boolean;
-    }>;
-  };
-  company: {
-    companyName: string;
-    brandName: string;
-    logoSidebar?: string;
-    logoLogin?: string;
-    logoHeader?: string;
-  };
-  modules: Record<string, {
-    enabled: boolean;
-    config: any;
-  }>;
-  forms: Record<string, any>;
-  tables: Record<string, any>;
-}
-
-const defaultConfig: AppConfig = {
-  theme: {
-    colors: {
-      primary: '#3b82f6',
-      secondary: '#1e293b',
-      success: '#10b981',
-      warning: '#f59e0b',
-      danger: '#ef4444',
-      surface: '#0f172a',
-      text: '#f8fafc'
-    },
-    radius: 'md',
-    density: 'comfortable',
-    headerFixed: true,
-    sidebarCollapsed: false,
-    glassEffect: true
-  },
-  sidebar: {
-    order: [],
-    items: []
-  },
-  company: {
-    companyName: 'Ramnirmalchits CRM',
-    brandName: 'Ramnirmalchits'
-  },
-  modules: {},
-  forms: {},
-  tables: {}
-};
 
 interface AppConfigContextType {
   config: AppConfig;
@@ -141,7 +74,11 @@ export const AppConfigProvider: React.FC<{ children: ReactNode }> = ({ children 
   const importConfig = (jsonString: string): boolean => {
     try {
       const importedConfig = JSON.parse(jsonString);
-      updateConfig(importedConfig);
+      if (validateConfig(importedConfig)) {
+        updateConfig(importedConfig);
+      } else {
+        updateConfig(mergeConfig(defaultConfig, importedConfig));
+      }
       return true;
     } catch (error) {
       console.error('Failed to import config:', error);
@@ -188,7 +125,7 @@ export const AppConfigProvider: React.FC<{ children: ReactNode }> = ({ children 
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [historyIndex, history]);
+  }, [historyIndex, history, undo, redo]);
 
   return (
     <AppConfigContext.Provider value={{
