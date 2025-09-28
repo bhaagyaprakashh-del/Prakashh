@@ -241,7 +241,6 @@ function App() {
                   <Route path="/departments" element={<Departments />} />
                   <Route path="/roles-permissions" element={<RolesPermissions />} />
                   <Route path="/users" element={<Users />} />
-                  <Route path="/users" element={<Users />} />
                   <Route path="/products" element={<Products />} />
                   <Route path="/templates" element={<TemplatesDMS />} />
                   <Route path="/audit-logs" element={<AuditLogs />} />
