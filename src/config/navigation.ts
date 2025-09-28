@@ -148,6 +148,20 @@ export const navigation: NavigationItem[] = [
     ]
   },
   {
+    id: 'integrate',
+    name: 'Integrate',
+    icon: Database,
+    children: [
+      { id: 'integrate-overview', name: 'Overview', icon: Eye },
+      { id: 'integrate-data-sync', name: 'Data Sync', icon: Zap },
+      { id: 'integrate-field-mappings', name: 'Field Mappings', icon: ArrowLeftRight },
+      { id: 'integrate-update-console', name: 'Update Console', icon: Upload },
+      { id: 'integrate-conflict-resolver', name: 'Conflict Resolver', icon: GitMerge },
+      { id: 'integrate-logs', name: 'Logs', icon: FileSearch },
+      { id: 'integrate-settings', name: 'Settings', icon: Cog }
+    ]
+  },
+  {
     id: 'customization',
     name: 'Customization',
     icon: Palette,

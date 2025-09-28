@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Search, ChevronRight } from 'lucide-react';
 import { NavigationItem, navigation } from '../../config/navigation';
+import { getRouteByPath } from '../../config/routes';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -22,7 +23,13 @@ const FlyoutPanel: React.FC<FlyoutPanelProps> = ({ item, isOpen, onClose, positi
   if (!isOpen || !item.children) return null;
 
   const handleSubPageClick = (subPageId: string) => {
-    navigate(`/${subPageId}`);
+    const route = getRouteByPath(`/${subPageId}`);
+    if (route) {
+      navigate(route.path);
+    } else {
+      console.warn(`Route not found for: /${subPageId}`);
+      navigate(`/${subPageId}`);
+    }
     onClose();
   };
 
@@ -116,7 +123,13 @@ const SidebarItem: React.FC<{
       onOpenFlyout(item, position);
     } else {
       // Direct navigation for modules without children
-      navigate(`/${item.id}`);
+      const route = getRouteByPath(`/${item.id}`);
+      if (route) {
+        navigate(route.path);
+      } else {
+        console.warn(`Route not found for: /${item.id}`);
+        navigate(`/${item.id}`);
+      }
     }
   };
 

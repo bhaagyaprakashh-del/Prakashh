@@ -465,7 +465,12 @@ export const Header: React.FC<HeaderProps> = ({ title, subtitle, onToggleSidebar
   };
 
   const handleNavigate = (pageId: string) => {
-    navigate(`/${pageId}`);
+    // Handle navigation with proper route resolution
+    if (pageId.startsWith('/')) {
+      navigate(pageId);
+    } else {
+      navigate(`/${pageId}`);
+    }
     setIsSearchOpen(false);
     setSearchTerm('');
   };

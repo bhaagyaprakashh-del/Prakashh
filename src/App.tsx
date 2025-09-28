@@ -6,75 +6,19 @@ import { ProtectedRoute } from './components/Auth/ProtectedRoute';
 import { LoginPage } from './components/Auth/LoginPage';
 import { LogoutPage } from './components/Auth/LogoutPage';
 import { MainLayout } from './components/Layout/MainLayout';
-import { DashboardHome } from './components/Dashboard/DashboardHome';
-import { LeadsKanban } from './components/CRM/LeadsKanban';
-import { GroupsOverview } from './components/ChitFund/GroupsOverview';
-import { CompanyProfile } from './components/Company/CompanyProfile';
-import { Branches } from './components/Company/Branches';
-import { Departments } from './components/Company/Departments';
-import { RolesPermissions } from './components/Company/RolesPermissions';
-import { Users } from './components/Company/Users';
-import { Products } from './components/Company/Products';
-import { TemplatesDMS } from './components/Company/TemplatesDMS';
-import { AuditLogs } from './components/Company/AuditLogs';
-import { Campaigns } from './components/Campaigns/Campaigns';
-import { EmailJourneys } from './components/Campaigns/EmailJourneys';
-import { ChatBroadcast } from './components/Campaigns/ChatBroadcast';
-import { Templates } from './components/Campaigns/Templates';
-import { EmployeeDirectory } from './components/HRMS/EmployeeDirectory';
-import { NewEmployee } from './components/HRMS/NewEmployee';
-import { Employee360 } from './components/HRMS/Employee360';
-import { AttendanceLogs } from './components/HRMS/AttendanceLogs';
-import { PayrollRuns } from './components/HRMS/PayrollRuns';
-import { HRMSReports } from './components/HRMS/HRMSReports';
-import { AllLeads } from './components/CRM/AllLeads';
-import { NewLead } from './components/CRM/NewLead';
-import { Lead360 } from './components/CRM/Lead360';
-import { Conversions } from './components/CRM/Conversions';
-import { OrdersReceipts } from './components/CRM/OrdersReceipts';
-import { LeadsReports } from './components/CRM/LeadsReports';
-import { ListOfGroups } from './components/ChitFund/ListOfGroups';
-import { Group360 } from './components/ChitFund/Group360';
-import { Members } from './components/Members';
-import { Schemes } from './components/Schemes';
-import { Payments } from './components/Payments';
-import { MyTasks } from './components/Tasks/MyTasks';
-import { TaskBoard } from './components/Tasks/TaskBoard';
-import { TicketsInbox } from './components/Tasks/TicketsInbox';
-import { SLAPriority } from './components/Tasks/SLAPriority';
-import { TasksReports } from './components/Tasks/TasksReports';
-import { AgentDirectory } from './components/Agents/AgentDirectory';
-import { AddAgent } from './components/Agents/AddAgent';
-import { TargetsRanking } from './components/Agents/TargetsRanking';
-import AgentDailyDiary from './components/Agents/DailyDiary';
-import { ReportsDashboard } from './components/Reports/ReportsDashboard';
-import { MyReports } from './components/Reports/MyReports';
-import { ScheduledReports } from './components/Reports/ScheduledReports';
-import { UploadsImport } from './components/Reports/UploadsImport';
-import { AllSubscribers } from './components/Subscribers/AllSubscribers';
-import { NewSubscriber } from './components/Subscribers/NewSubscriber';
-import { Subscriber360 } from './components/Subscribers/Subscriber360';
-import { SubscribersReports } from './components/Subscribers/SubscribersReports';
-import { CreateAllocateGroups } from './components/ChitFund/CreateAllocateGroups';
-import { ChitReports } from './components/ChitFund/ChitReports';
-import { MonthWeekDay } from './components/Calendar/MonthWeekDay';
-import { MyEvents } from './components/Calendar/MyEvents';
-import { TeamView } from './components/Calendar/TeamView';
+import { routes, auditRoutes } from './config/routes';
 import { initializeSampleData } from './utils/storage';
 
-// Placeholder components for other pages
-const PlaceholderPage: React.FC<{ title: string; description: string }> = ({ title, description }) => (
-  <div className="flex flex-col items-center justify-center h-96 text-center">
-    <div className="bg-slate-700/30 backdrop-blur-sm rounded-full p-4 mb-4 border border-slate-600/50">
-      <div className="h-16 w-16 bg-slate-600/50 rounded-full"></div>
-    </div>
-    <h2 className="text-2xl font-bold text-white mb-2">{title}</h2>
-    <p className="text-slate-400 max-w-md">{description}</p>
-    <div className="mt-6 px-6 py-3 bg-blue-500/20 text-blue-400 rounded-lg text-sm border border-blue-500/30 backdrop-blur-sm">
-      This module is coming soon! The foundation is ready for implementation.
-    </div>
-  </div>
-);
+// Not Found Redirect Component
+const NotFoundRedirect: React.FC = () => {
+  const location = useLocation();
+  
+  useEffect(() => {
+    console.warn(`🚨 Route not found: ${location.pathname}`);
+  }, [location.pathname]);
+  
+  return <Navigate to="/dashboard" replace />;
+};
 
 function App() {
   const location = useLocation();
@@ -83,6 +27,11 @@ function App() {
   useEffect(() => {
     // Initialize sample data on first load
     initializeSampleData();
+    
+    // Run route audit in development
+    if (process.env.NODE_ENV === 'development') {
+      auditRoutes();
+    }
   }, []);
 
   const getPageTitle = (path: string) => {
@@ -188,75 +137,31 @@ function App() {
                 title={pageConfig.title}
                 subtitle={pageConfig.subtitle}
               >
-                <Routes>
-                  {/* Dashboard */}
-                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                  <Route path="/dashboard" element={<DashboardHome onPageChange={navigateToPage} />} />
-                  
-                  {/* All Routes */}
-                  <Route path="/leads-all" element={<AllLeads />} />
-                  <Route path="/leads-kanban" element={<LeadsKanban />} />
-                  <Route path="/leads-new" element={<NewLead onBack={() => window.history.back()} onSave={() => navigateToPage('leads-all')} />} />
-                  <Route path="/leads-360" element={<Lead360 leadId="1" onBack={() => window.history.back()} />} />
-                  <Route path="/leads-conversions" element={<Conversions />} />
-                  <Route path="/leads-orders" element={<OrdersReceipts />} />
-                  <Route path="/leads-reports" element={<LeadsReports />} />
-                  <Route path="/tasks-my" element={<MyTasks />} />
-                  <Route path="/tasks-board" element={<TaskBoard />} />
-                  <Route path="/tickets-inbox" element={<TicketsInbox />} />
-                  <Route path="/tickets-sla" element={<SLAPriority />} />
-                  <Route path="/tasks-reports" element={<TasksReports />} />
-                  <Route path="/campaigns-all" element={<Campaigns />} />
-                  <Route path="/email-journeys" element={<EmailJourneys />} />
-                  <Route path="/chat-broadcast" element={<ChatBroadcast />} />
-                  <Route path="/templates" element={<Templates />} />
-                  <Route path="/calendar-month" element={<MonthWeekDay />} />
-                  <Route path="/calendar-my" element={<MyEvents />} />
-                  <Route path="/calendar-team" element={<TeamView />} />
-                  <Route path="/subscribers-all" element={<AllSubscribers />} />
-                  <Route path="/subscribers-new" element={<NewSubscriber onBack={() => window.history.back()} onSave={() => navigateToPage('subscribers-all')} />} />
-                  <Route path="/subscribers-360" element={<Subscriber360 subscriberId="1" onBack={() => window.history.back()} />} />
-                  <Route path="/subscribers-reports" element={<SubscribersReports />} />
-                  <Route path="/agents-directory" element={<AgentDirectory />} />
-                  <Route path="/agents-add" element={<AddAgent onBack={() => window.history.back()} onSave={() => navigateToPage('agents-directory')} />} />
-                  <Route path="/agents-targets" element={<TargetsRanking />} />
-                  <Route path="/agents-diary" element={<AgentDailyDiary />} />
-                  <Route path="/chit-overview" element={<GroupsOverview />} />
-                  <Route path="/chit-create" element={<CreateAllocateGroups onBack={() => window.history.back()} onSave={() => navigateToPage('chit-list')} />} />
-                  <Route path="/chit-list" element={<ListOfGroups />} />
-                  <Route path="/chit-360" element={<Group360 groupId="1" onBack={() => window.history.back()} />} />
-                  <Route path="/chit-reports" element={<ChitReports />} />
-                  <Route path="/hrms-directory" element={<EmployeeDirectory />} />
-                  <Route path="/hrms-new-employee" element={<NewEmployee onBack={() => window.history.back()} onSave={() => navigateToPage('hrms-directory')} />} />
-                  <Route path="/hrms-employee-360" element={<Employee360 employeeId={selectedEmployeeId} onBack={() => window.history.back()} />} />
-                  <Route path="/hrms-attendance" element={<AttendanceLogs />} />
-                  <Route path="/hrms-payroll" element={<PayrollRuns />} />
-                  <Route path="/hrms-reports" element={<HRMSReports />} />
-                  <Route path="/reports-dashboard" element={<ReportsDashboard />} />
-                  <Route path="/reports-my" element={<MyReports />} />
-                  <Route path="/reports-scheduled" element={<ScheduledReports />} />
-                  <Route path="/reports-uploads" element={<UploadsImport />} />
-                  <Route path="/company-profile-branding" element={<CompanyProfile />} />
-                  <Route path="/branches" element={<Branches />} />
-                  <Route path="/departments" element={<Departments />} />
-                  <Route path="/roles-permissions" element={<RolesPermissions />} />
-                  <Route path="/users" element={<Users />} />
-                  <Route path="/products" element={<Products />} />
-                  <Route path="/templates" element={<TemplatesDMS />} />
-                  <Route path="/audit-logs" element={<AuditLogs />} />
-                  <Route path="/members" element={<Members />} />
-                  <Route path="/schemes" element={<Schemes />} />
-                  <Route path="/payments" element={<Payments />} />
-                  
-                  {/* Customization */}
-                  <Route path="/custom-theme" element={<PlaceholderPage title="Theme Customization" description="Customize colors, typography, and visual design elements." />} />
-                  <Route path="/custom-sidebar" element={<PlaceholderPage title="Navigation Settings" description="Customize sidebar layout, order, and visibility options." />} />
-                  <Route path="/custom-modules" element={<PlaceholderPage title="Module Configuration" description="Enable/disable features and configure module-specific settings." />} />
-                  <Route path="/custom-forms" element={<PlaceholderPage title="Form Customization" description="Customize form fields, validation, and conditional logic." />} />
-                  
-                  {/* Catch all route */}
-                  <Route path="*" element={<Navigate to="/dashboard" replace />} />
-                </Routes>
+                <React.Suspense fallback={
+                  <div className="flex items-center justify-center h-96">
+                    <div className="text-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400 mx-auto mb-4"></div>
+                      <p className="text-slate-400">Loading...</p>
+                    </div>
+                  </div>
+                }>
+                  <Routes>
+                    {/* Root redirect */}
+                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                    
+                    {/* Dynamic routes from registry */}
+                    {routes.map(route => (
+                      <Route 
+                        key={route.key} 
+                        path={route.path} 
+                        element={route.element} 
+                      />
+                    ))}
+                    
+                    {/* Catch all route */}
+                    <Route path="*" element={<NotFoundRedirect />} />
+                  </Routes>
+                </React.Suspense>
               </MainLayout>
             </ProtectedRoute>
           } />
