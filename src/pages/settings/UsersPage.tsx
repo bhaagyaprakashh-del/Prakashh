@@ -140,7 +140,7 @@ const UserCard: React.FC<{ user: UserRow }> = ({ user }) => {
   );
 };
 
-const UserTable: React.FC<{ users: UserRow[] }> = ({ users }) => {
+const UserTable: React.FC<{ users: UserRow[], setRefreshKey: React.Dispatch<React.SetStateAction<number>> }> = ({ users, setRefreshKey }) => {
   const getStatusColor = (status: string) => {
     return status === 'Active' 
       ? 'bg-green-100 text-green-800' 
@@ -319,7 +319,7 @@ const UsersPage: React.FC = () => {
     employees: mockUsers.filter(u => u.category === 'Employees').length,
     agents: mockUsers.filter(u => u.category === 'Agents').length,
     subscribers: mockUsers.filter(u => u.category === 'Subscribers').length
-  }), []);
+  }), [refreshKey]); // Add refreshKey dependency to recalculate stats
 
   const handleAddUser = () => {
     setShowAddUser(true);
@@ -540,7 +540,7 @@ const UsersPage: React.FC = () => {
         </div>
 
         {/* User Table */}
-        <UserTable users={paginatedUsers} />
+        <UserTable users={paginatedUsers} setRefreshKey={setRefreshKey} />
 
         {/* Pagination */}
         {totalPages > 1 && (
