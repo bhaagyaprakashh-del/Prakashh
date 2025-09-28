@@ -1,9 +1,4 @@
-import { 
-  Home, BarChart3, Target, Bell, Users, Kanban, Plus, Eye, TrendingUp, FileText, 
-  CheckSquare, Ticket, Clock, MessageSquare, Mail, Calendar, UserCheck, Building, 
-  Award, CreditCard, DollarSign, Upload, Settings, Palette, List, Edit, Shield, Activity,
-  Database, Zap, ArrowLeftRight, GitMerge, AlertTriangle, FileSearch, Cog
-} from 'lucide-react';
+import { Home, BarChart3, Target, Bell, Users, Kanban, Plus, Eye, TrendingUp, FileText, CheckSquare, Ticket, Clock, MessageSquare, Mail, Calendar, UserCheck, Building, Award, CreditCard, DollarSign, Upload, Settings, Palette, List, CreditCard as Edit, Shield, Activity, Database, Zap, ArrowLeftRight, GitMerge, AlertTriangle, FileSearch, Cog } from 'lucide-react';
 
 export interface NavigationItem {
   id: string;

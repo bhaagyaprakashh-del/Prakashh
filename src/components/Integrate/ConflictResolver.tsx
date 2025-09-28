@@ -1,18 +1,5 @@
 import React, { useState } from 'react';
-import {
-  GitMerge,
-  ArrowLeft,
-  ArrowRight,
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  Eye,
-  Edit,
-  Save,
-  RefreshCw,
-  Filter,
-  Search
-} from 'lucide-react';
+import { GitMerge, ArrowLeft, ArrowRight, CheckCircle, XCircle, AlertTriangle, Eye, CreditCard as Edit, Save, RefreshCw, Filter, Search } from 'lucide-react';
 import { useIntegrationStore } from '../../stores/integrationStore';
 
 interface DataConflict {
