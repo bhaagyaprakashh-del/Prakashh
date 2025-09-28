@@ -1,16 +1,6 @@
 import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { 
-  Palette, 
-  List, 
-  Settings, 
-  Edit, 
-  Table,
-  RotateCcw,
-  Download,
-  Upload,
-  Save
-} from 'lucide-react';
+import { Palette, List, Settings, CreditCard as Edit, Table, RotateCcw, Download, Upload, Save } from 'lucide-react';
 import { useAppConfig } from '../../hooks/useAppConfig';
 import toast from 'react-hot-toast';
 

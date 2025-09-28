@@ -1,5 +1,5 @@
 import React from 'react';
-import { MoreVertical, Power, PowerOff, Settings, ExternalLink, Plus, Edit, Trash2, Download, Upload, RefreshCw } from 'lucide-react';
+import { MoreVertical, Power, PowerOff, Settings, ExternalLink, Plus, CreditCard as Edit, Trash2, Download, Upload, RefreshCw } from 'lucide-react';
 
 interface ModuleCard {
   id: string;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, Edit, Trash2, Copy, Eye, Save, Download, Upload } from 'lucide-react';
+import { Plus, Search, CreditCard as Edit, Trash2, Copy, Eye, Save, Download, Upload } from 'lucide-react';
 import { useAppConfig } from '../../hooks/useAppConfig';
 import { FormSchema, FormField } from '../../lib/appConfig';
 import toast from 'react-hot-toast';

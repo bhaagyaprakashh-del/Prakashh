@@ -1,18 +1,5 @@
 import React from 'react';
-import { 
-  LayoutDashboard, 
-  Users, 
-  CheckSquare, 
-  Megaphone, 
-  Calendar, 
-  UserPlus, 
-  Shield, 
-  Users2, 
-  Building, 
-  BarChart3, 
-  Settings as SettingsIcon,
-  Cog
-} from 'lucide-react';
+import { LayoutDashboard, Users, CheckSquare, Megaphone, Calendar, UserPlus, Shield, Users as Users2, Building, BarChart3, Settings as SettingsIcon, Cog } from 'lucide-react';
 import { useAppConfig } from '../../hooks/useAppConfig';
 import { DndList } from '../../components/customization/DndList';
 import { JsonEditor } from '../../components/customization/JsonEditor';

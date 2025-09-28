@@ -1,19 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Filter } from 'lucide-react';
-import { 
-  LayoutDashboard, 
-  Users, 
-  CheckSquare, 
-  Megaphone, 
-  Calendar, 
-  UserPlus, 
-  Shield, 
-  Users2, 
-  Building, 
-  BarChart3, 
-  Settings as SettingsIcon,
-  Cog
-} from 'lucide-react';
+import { LayoutDashboard, Users, CheckSquare, Megaphone, Calendar, UserPlus, Shield, Users as Users2, Building, BarChart3, Settings as SettingsIcon, Cog } from 'lucide-react';
 import { useAppConfig } from '../../hooks/useAppConfig';
 import { CardGrid } from '../../components/customization/CardGrid';
 import { JsonEditor } from '../../components/customization/JsonEditor';
