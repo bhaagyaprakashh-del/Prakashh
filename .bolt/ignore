@@ -1,0 +1,67 @@
+# --- VCS / metadata ---
+.git/
+.bolt/
+
+# --- Dependencies ---
+node_modules/
+.pnpm-store/
+.bun/
+
+# --- Build outputs ---
+dist/
+dist-ssr/
+build/
+.next/
+.nuxt/
+.out/
+coverage/
+
+# --- Tool caches ---
+.vite/
+.parcel-cache/
+.turbo/
+.cache/
+.eslintcache
+.stylelintcache
+
+# --- Runtime & logs ---
+logs/
+*.log
+tmp/
+*.pid
+
+# --- Env & local config ---
+.env
+.env.*.local
+*.local
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# --- Heavy/local assets (keep out of Bolt; use external storage/CDN) ---
+public/uploads/
+uploads/
+storage/
+
+# --- Large binary types (commonly balloon project size) ---
+*.zip
+*.7z
+*.rar
+*.tar
+*.gz
+*.bz2
+*.xz
+*.iso
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.wav
+*.psd
+*.ai
+*.sketch
+*.blend
