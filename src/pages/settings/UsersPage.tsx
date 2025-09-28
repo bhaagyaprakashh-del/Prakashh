@@ -173,12 +173,6 @@ const UserTable: React.FC<{ users: UserRow[] }> = ({ users }) => {
     updateUser(updatedUser);
     setRefreshKey(prev => prev + 1); // Force re-render
     toast.success(`${user.status === 'Active' ? 'Disabled' : 'Enabled'} ${user.name}`);
-      ...user,
-      status: user.status === 'Active' ? 'Inactive' as const : 'Active' as const
-    };
-    updateUser(updatedUser);
-    setRefreshKey(prev => prev + 1); // Force re-render
-    toast.success(`${user.status === 'Active' ? 'Disabled' : 'Enabled'} ${user.name}`);
   };
 
   return (
@@ -325,7 +319,7 @@ const UsersPage: React.FC = () => {
     employees: mockUsers.filter(u => u.category === 'Employees').length,
     agents: mockUsers.filter(u => u.category === 'Agents').length,
     subscribers: mockUsers.filter(u => u.category === 'Subscribers').length
-  }), [refreshKey]); // Add refreshKey dependency to recalculate stats
+  }), []);
 
   const handleAddUser = () => {
     setShowAddUser(true);
