@@ -1,10 +1,33 @@
 import React, { useState, useMemo } from 'react';
-import { Plus, Search, Filter, Calendar, Clock, Users, CheckCircle, AlertTriangle, Play, Pause, RotateCcw, Eye, CreditCard as Edit, Trash2, MessageSquare, Paperclip, Star, Flag, User, Target, Award, TrendingUp, Zap, MoreVertical, Download, Upload } from 'lucide-react';
+import {
+  Plus,
+  Search,
+  Filter,
+  Calendar,
+  Clock,
+  Users,
+  CheckCircle,
+  AlertTriangle,
+  Play,
+  Pause,
+  RotateCcw,
+  Eye,
+  Edit,
+  Trash2,
+  MessageSquare,
+  Paperclip,
+  Star,
+  Flag,
+  User,
+  Target,
+  Award,
+  TrendingUp,
+  Zap,
+  MoreVertical,
+  Download,
+  Upload
+} from 'lucide-react';
 import { Task } from '../../types/tasks';
-import { ActionButton } from '../UI/ActionButton';
-import { ActionCard } from '../UI/ActionCard';
-import { useActions } from '../../hooks/useActions';
-import toast from 'react-hot-toast';
 
 const sampleTasks: Task[] = [
   {
@@ -59,22 +82,8 @@ export const MyTasks: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'my' | 'team'>('my');
-  
-  const { isLoading, navigateTo } = useActions();
 
   const currentUser = 'Priya Sharma';
-
-  const handleViewTask = (taskId: string) => {
-    navigateTo(`/tasks-360?id=${taskId}`);
-  };
-
-  const handleEditTask = (taskId: string) => {
-    navigateTo(`/tasks-edit?id=${taskId}`);
-  };
-
-  const handleCreateTask = () => {
-    navigateTo('/tasks-new');
-  };
 
   const filteredTasks = useMemo(() => {
     let filtered = tasks;
@@ -144,14 +153,6 @@ export const MyTasks: React.FC = () => {
             <Plus className="h-4 w-4 mr-2" />
             New Task
           </button>
-          <ActionButton
-            action="create-task"
-            onClick={handleCreateTask}
-            variant="primary"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            New Task
-          </ActionButton>
         </div>
       </div>
 
@@ -258,13 +259,7 @@ export const MyTasks: React.FC = () => {
         {/* Tasks Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {filteredTasks.map((task) => (
-            <ActionCard 
-              key={task.id} 
-              action="view-task"
-              id={task.id}
-              onClick={() => handleViewTask(task.id)}
-              className="p-6"
-            >
+            <div key={task.id} className="bg-slate-800/40 backdrop-blur-xl rounded-2xl p-6 border border-yellow-400/30">
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="text-lg font-semibold text-slate-50">{task.title}</h3>
@@ -317,29 +312,15 @@ export const MyTasks: React.FC = () => {
                   <span>Created {new Date(task.createdAt).toLocaleDateString()}</span>
                 </div>
                 <div className="flex space-x-2">
-                  <ActionButton
-                    action="view-task"
-                    id={task.id}
-                    onClick={() => handleViewTask(task.id)}
-                    variant="secondary"
-                    size="sm"
-                    className="p-2"
-                  >
+                  <button className="p-2 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-all">
                     <Eye className="h-4 w-4" />
-                  </ActionButton>
-                  <ActionButton
-                    action="edit-task"
-                    id={task.id}
-                    onClick={() => handleEditTask(task.id)}
-                    variant="secondary"
-                    size="sm"
-                    className="p-2"
-                  >
+                  </button>
+                  <button className="p-2 text-slate-400 hover:text-green-400 hover:bg-green-500/10 rounded-lg transition-all">
                     <Edit className="h-4 w-4" />
-                  </ActionButton>
+                  </button>
                 </div>
               </div>
-            </ActionCard>
+            </div>
           ))}
         </div>
 

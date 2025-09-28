@@ -1,27 +1,16 @@
 import React, { useState } from 'react';
-import { Plus, Search, CreditCard as Edit, Trash2, Mail, Phone, MapPin, Calendar } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Mail, Phone, MapPin, Calendar } from 'lucide-react';
 import { Member } from '../types';
 import { storage } from '../utils/storage';
 import { calculateMemberStats, formatCurrency, formatDate } from '../utils/calculations';
 import { MemberForm } from './MemberForm';
-import { ActionButton } from './UI/ActionButton';
-import { ActionCard } from './UI/ActionCard';
-import { Modal } from './UI/Modal';
-import { ConfirmDialog } from './UI/ConfirmDialog';
-import { useModal } from '../hooks/useModal';
-import { useActions } from '../hooks/useActions';
-import toast from 'react-hot-toast';
 
 export const Members: React.FC = () => {
   const [members, setMembers] = useState<Member[]>(storage.getMembers());
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [showForm, setShowForm] = useState(false);
   const [filterStatus, setFilterStatus] = useState<string>('all');
-  
-  const { isLoading } = useActions();
-  const formModal = useModal();
-  const confirmModal = useModal();
-  const [memberToDelete, setMemberToDelete] = useState<Member | null>(null);
 
   const filteredMembers = members.filter(member => {
     const matchesSearch = member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -33,26 +22,18 @@ export const Members: React.FC = () => {
 
   const handleAddMember = () => {
     setSelectedMember(null);
-    formModal.openModal();
+    setShowForm(true);
   };
 
   const handleEditMember = (member: Member) => {
     setSelectedMember(member);
-    formModal.openModal(member);
+    setShowForm(true);
   };
 
-  const handleDeleteMember = (member: Member) => {
-    setMemberToDelete(member);
-    confirmModal.openModal();
-  };
-
-  const confirmDelete = () => {
-    if (memberToDelete) {
-      storage.deleteMember(memberToDelete.id);
+  const handleDeleteMember = (memberId: string) => {
+    if (window.confirm('Are you sure you want to delete this member?')) {
+      storage.deleteMember(memberId);
       setMembers(storage.getMembers());
-      toast.success('Member deleted successfully');
-      confirmModal.closeModal();
-      setMemberToDelete(null);
     }
   };
 
@@ -76,8 +57,7 @@ export const Members: React.FC = () => {
       storage.addMember(newMember);
     }
     setMembers(storage.getMembers());
-    formModal.closeModal();
-    toast.success(selectedMember ? 'Member updated successfully' : 'Member added successfully');
+    setShowForm(false);
   };
 
   const getStatusColor = (status: string) => {
@@ -89,9 +69,18 @@ export const Members: React.FC = () => {
     }
   };
 
+  if (showForm) {
+    return (
+      <MemberForm
+        member={selectedMember}
+        onSubmit={handleFormSubmit}
+        onCancel={() => setShowForm(false)}
+      />
+    );
+  }
+
   return (
-    <>
-      <div className="space-y-6">
+    <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Members</h1>
@@ -99,15 +88,13 @@ export const Members: React.FC = () => {
             Manage your chit fund members and their information
           </p>
         </div>
-        <ActionButton
-          action="open-modal"
-          target="add-member"
+        <button
           onClick={handleAddMember}
-          variant="primary"
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
         >
           <Plus className="h-4 w-4 mr-2" />
           Add Member
-        </ActionButton>
+        </button>
       </div>
 
       {/* Filters and Search */}
@@ -144,12 +131,7 @@ export const Members: React.FC = () => {
         {filteredMembers.map((member) => {
           const stats = calculateMemberStats(member.id);
           return (
-            <ActionCard 
-              key={member.id} 
-              className="bg-white shadow rounded-lg overflow-hidden p-0"
-              action="view-member"
-              id={member.id}
-            >
+            <div key={member.id} className="bg-white shadow rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">{member.name}</h3>
@@ -195,26 +177,18 @@ export const Members: React.FC = () => {
                 </div>
 
                 <div className="mt-4 flex justify-end space-x-2">
-                  <ActionButton
-                    action="edit-member"
-                    id={member.id}
+                  <button
                     onClick={() => handleEditMember(member)}
-                    variant="secondary"
-                    size="sm"
-                    className="p-2"
+                    className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors duration-200"
                   >
                     <Edit className="h-4 w-4" />
-                  </ActionButton>
-                  <ActionButton
-                    action="delete-member"
-                    id={member.id}
-                    onClick={() => handleDeleteMember(member)}
-                    variant="danger"
-                    size="sm"
-                    className="p-2"
+                  </button>
+                  <button
+                    onClick={() => handleDeleteMember(member.id)}
+                    className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors duration-200"
                   >
                     <Trash2 className="h-4 w-4" />
-                  </ActionButton>
+                  </button>
                 </div>
               </div>
 
@@ -230,7 +204,7 @@ export const Members: React.FC = () => {
                   ></div>
                 </div>
               </div>
-            </ActionCard>
+            </div>
           );
         })}
       </div>
@@ -244,34 +218,6 @@ export const Members: React.FC = () => {
           </div>
         </div>
       )}
-      </div>
-
-      {/* Add/Edit Member Modal */}
-      <Modal
-        isOpen={formModal.isOpen}
-        onClose={formModal.closeModal}
-        title={selectedMember ? 'Edit Member' : 'Add New Member'}
-        size="lg"
-      >
-        <MemberForm
-          member={selectedMember}
-          onSubmit={handleFormSubmit}
-          onCancel={formModal.closeModal}
-        />
-      </Modal>
-
-      {/* Delete Confirmation Dialog */}
-      <ConfirmDialog
-        isOpen={confirmModal.isOpen}
-        onClose={confirmModal.closeModal}
-        onConfirm={confirmDelete}
-        title="Delete Member"
-        message={`Are you sure you want to delete ${memberToDelete?.name}? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
-        type="danger"
-        isLoading={isLoading['delete-member']}
-      />
-    </>
+    </div>
   );
 };

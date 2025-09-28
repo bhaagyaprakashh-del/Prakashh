@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Bell, User, Menu, Upload, LogOut, ChevronDown, Clock, X, CheckCircle, AlertTriangle, Info, Settings, HelpCircle } from 'lucide-react';
+import { Search, Bell, User, Menu, Upload, LogOut, ChevronDown, Clock, X, CheckCircle, AlertTriangle, Info } from 'lucide-react';
 import { navigation } from '../../config/navigation';
-import { ActionButton } from '../UI/ActionButton';
-import { useActions } from '../../hooks/useActions';
-import toast from 'react-hot-toast';
 
 interface HeaderProps {
   title: string;
@@ -190,7 +187,6 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
 const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ isOpen, onClose }) => {
   const [avatar, setAvatar] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { navigateTo } = useActions();
 
   const handleAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -204,8 +200,8 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ isOpen, onClose }) =>
   };
 
   const handleLogout = () => {
-    logout();
-    navigateTo('/login');
+    // Implement logout logic here
+    console.log('Logging out...');
     onClose();
   };
 
@@ -269,27 +265,20 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ isOpen, onClose }) =>
             <Bell className="h-5 w-5" />
             <span>Notifications</span>
           </button>
-          <ActionButton
-            action="navigate"
-            target="/help"
-            variant="secondary"
-            className="w-full flex items-center space-x-3 p-3 text-slate-300 hover:text-slate-50 hover:bg-slate-700/50 rounded-xl transition-all border-0 bg-transparent"
-          >
+          <button className="w-full flex items-center space-x-3 p-3 text-slate-300 hover:text-slate-50 hover:bg-slate-700/50 rounded-xl transition-all">
             <HelpCircle className="h-5 w-5" />
             <span>Help & Support</span>
-          </ActionButton>
+          </button>
           
           <div className="border-t border-yellow-400/30 my-2"></div>
           
-          <ActionButton
-            action="logout"
+          <button
             onClick={handleLogout}
-            variant="danger"
-            className="w-full flex items-center space-x-3 p-3 text-red-300 hover:text-red-200 hover:bg-red-500/10 rounded-xl transition-all border-0 bg-transparent"
+            className="w-full flex items-center space-x-3 p-3 text-red-300 hover:text-red-200 hover:bg-red-500/10 rounded-xl transition-all"
           >
             <LogOut className="h-5 w-5" />
             <span>Sign Out</span>
-          </ActionButton>
+          </button>
         </div>
       </div>
     </>
@@ -422,7 +411,6 @@ export const Header: React.FC<HeaderProps> = ({ title, subtitle, onToggleSidebar
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const { navigateTo } = useActions();
 
   // Update time every second
   useEffect(() => {
@@ -475,7 +463,7 @@ export const Header: React.FC<HeaderProps> = ({ title, subtitle, onToggleSidebar
   };
 
   const handleNavigate = (pageId: string) => {
-    navigateTo(`/${pageId}`);
+    navigate(`/${pageId}`);
     setIsSearchOpen(false);
     setSearchTerm('');
   };

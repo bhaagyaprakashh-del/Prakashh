@@ -4,21 +4,14 @@ import { Payment } from '../types';
 import { storage } from '../utils/storage';
 import { formatCurrency, formatDate } from '../utils/calculations';
 import { PaymentForm } from './PaymentForm';
-import { ActionButton } from './UI/ActionButton';
-import { Modal } from './UI/Modal';
-import { useModal } from '../hooks/useModal';
-import { useActions } from '../hooks/useActions';
-import toast from 'react-hot-toast';
 
 export const Payments: React.FC = () => {
   const [payments, setPayments] = useState<Payment[]>(storage.getPayments());
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [showForm, setShowForm] = useState(false);
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterMethod, setFilterMethod] = useState<string>('all');
-  
-  const { isLoading } = useActions();
-  const formModal = useModal();
 
   const members = storage.getMembers();
   const schemes = storage.getSchemes();
@@ -38,12 +31,12 @@ export const Payments: React.FC = () => {
 
   const handleAddPayment = () => {
     setSelectedPayment(null);
-    formModal.openModal();
+    setShowForm(true);
   };
 
   const handleEditPayment = (payment: Payment) => {
     setSelectedPayment(payment);
-    formModal.openModal(payment);
+    setShowForm(true);
   };
 
   const handleMarkAsPaid = (paymentId: string) => {
@@ -56,7 +49,6 @@ export const Payments: React.FC = () => {
       };
       storage.updatePayment(updatedPayment);
       setPayments(storage.getPayments());
-      toast.success('Payment marked as paid');
     }
   };
 
@@ -78,8 +70,7 @@ export const Payments: React.FC = () => {
       storage.addPayment(newPayment);
     }
     setPayments(storage.getPayments());
-    formModal.closeModal();
-    toast.success(selectedPayment ? 'Payment updated successfully' : 'Payment added successfully');
+    setShowForm(false);
   };
 
   const getStatusColor = (status: string) => {
@@ -115,9 +106,18 @@ export const Payments: React.FC = () => {
     totalAmount: payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0),
   };
 
+  if (showForm) {
+    return (
+      <PaymentForm
+        payment={selectedPayment}
+        onSubmit={handleFormSubmit}
+        onCancel={() => setShowForm(false)}
+      />
+    );
+  }
+
   return (
-    <>
-      <div className="space-y-6">
+    <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Payments</h1>
@@ -125,14 +125,13 @@ export const Payments: React.FC = () => {
             Track and manage all payment transactions
           </p>
         </div>
-        <ActionButton
-          action="add-payment"
+        <button
           onClick={handleAddPayment}
-          variant="primary"
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
         >
           <Plus className="h-4 w-4 mr-2" />
           Add Payment
-        </ActionButton>
+        </button>
       </div>
 
       {/* Stats Cards */}
@@ -306,26 +305,19 @@ export const Payments: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                       {payment.status === 'pending' && (
-                        <ActionButton
-                          action="mark-paid"
-                          id={payment.id}
+                        <button
                           onClick={() => handleMarkAsPaid(payment.id)}
-                          variant="success"
-                          size="sm"
-                          isLoading={isLoading[`mark-paid-${payment.id}`]}
+                          className="text-green-600 hover:text-green-900"
                         >
                           Mark Paid
-                        </ActionButton>
+                        </button>
                       )}
-                      <ActionButton
-                        action="edit-payment"
-                        id={payment.id}
+                      <button
                         onClick={() => handleEditPayment(payment)}
-                        variant="secondary"
-                        size="sm"
+                        className="text-blue-600 hover:text-blue-900"
                       >
                         Edit
-                      </ActionButton>
+                      </button>
                     </td>
                   </tr>
                 );
@@ -342,21 +334,6 @@ export const Payments: React.FC = () => {
           <p className="text-sm text-gray-600">Try adjusting your search criteria or add a new payment.</p>
         </div>
       )}
-      </div>
-
-      {/* Add/Edit Payment Modal */}
-      <Modal
-        isOpen={formModal.isOpen}
-        onClose={formModal.closeModal}
-        title={selectedPayment ? 'Edit Payment' : 'Add New Payment'}
-        size="lg"
-      >
-        <PaymentForm
-          payment={selectedPayment}
-          onSubmit={handleFormSubmit}
-          onCancel={formModal.closeModal}
-        />
-      </Modal>
-    </>
+    </div>
   );
 };

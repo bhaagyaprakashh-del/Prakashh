@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { AuthProvider, useAuth } from './hooks/useAuth';
-import { AppConfigProvider } from './hooks/useAppConfig';
-import { LoginPage } from './components/Auth/LoginPage';
-import { ProtectedRoute } from './components/Auth/ProtectedRoute';
 import { MainLayout } from './components/Layout/MainLayout';
 import { DashboardHome } from './components/Dashboard/DashboardHome';
 import { LeadsKanban } from './components/CRM/LeadsKanban';
@@ -61,12 +57,6 @@ import { MonthWeekDay } from './components/Calendar/MonthWeekDay';
 import { MyEvents } from './components/Calendar/MyEvents';
 import { TeamView } from './components/Calendar/TeamView';
 import { initializeSampleData } from './utils/storage';
-import { CustomizationLayout } from './pages/Customization/CustomizationLayout';
-import { ThemePage } from './pages/Customization/ThemePage';
-import { SidebarPage } from './pages/Customization/SidebarPage';
-import { ModulesPage } from './pages/Customization/ModulesPage';
-import { FormEditorPage } from './pages/Customization/FormEditorPage';
-import { TableEditorPage } from './pages/Customization/TableEditorPage';
 
 // Placeholder components for other pages
 const PlaceholderPage: React.FC<{ title: string; description: string }> = ({ title, description }) => (
@@ -82,8 +72,7 @@ const PlaceholderPage: React.FC<{ title: string; description: string }> = ({ tit
   </div>
 );
 
-const AppContent: React.FC = () => {
-  const { authState } = useAuth();
+function App() {
   const location = useLocation();
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>('');
 
@@ -179,137 +168,83 @@ const AppContent: React.FC = () => {
     window.location.href = `/${page}`;
   };
 
-  // If not authenticated, show login page
-  if (!authState.isAuthenticated) {
-    return <LoginPage />;
-  }
-
-  return (
-    <MainLayout
-      title={pageConfig.title}
-      subtitle={pageConfig.subtitle}
-    >
-      <Routes>
-        {/* Dashboard */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard" element={<DashboardHome onPageChange={navigateToPage} />} />
-        
-        {/* All Routes */}
-        <Route path="/leads-all" element={<AllLeads />} />
-        <Route path="/leads-kanban" element={<LeadsKanban />} />
-        <Route path="/leads-new" element={<NewLead onBack={() => window.history.back()} onSave={() => navigateToPage('leads-all')} />} />
-        <Route path="/leads-360" element={<Lead360 leadId="1" onBack={() => window.history.back()} />} />
-        <Route path="/leads-conversions" element={<Conversions />} />
-        <Route path="/leads-orders" element={<OrdersReceipts />} />
-        <Route path="/leads-reports" element={<LeadsReports />} />
-        <Route path="/tasks-my" element={<MyTasks />} />
-        <Route path="/tasks-board" element={<TaskBoard />} />
-        <Route path="/tickets-inbox" element={<TicketsInbox />} />
-        <Route path="/tickets-sla" element={<SLAPriority />} />
-        <Route path="/tasks-reports" element={<TasksReports />} />
-        <Route path="/campaigns-all" element={<Campaigns />} />
-        <Route path="/email-journeys" element={<EmailJourneys />} />
-        <Route path="/chat-broadcast" element={<ChatBroadcast />} />
-        <Route path="/templates" element={<Templates />} />
-        <Route path="/calendar-month" element={<MonthWeekDay />} />
-        <Route path="/calendar-my" element={<MyEvents />} />
-        <Route path="/calendar-team" element={<TeamView />} />
-        <Route path="/subscribers-all" element={<AllSubscribers />} />
-        <Route path="/subscribers-new" element={<NewSubscriber onBack={() => window.history.back()} onSave={() => navigateToPage('subscribers-all')} />} />
-        <Route path="/subscribers-360" element={<Subscriber360 subscriberId="1" onBack={() => window.history.back()} />} />
-        <Route path="/subscribers-reports" element={<SubscribersReports />} />
-        <Route path="/agents-directory" element={<AgentDirectory />} />
-        <Route path="/agents-add" element={<AddAgent onBack={() => window.history.back()} onSave={() => navigateToPage('agents-directory')} />} />
-        <Route path="/agents-targets" element={<TargetsRanking />} />
-        <Route path="/agents-diary" element={<AgentDailyDiary />} />
-        <Route path="/chit-overview" element={<GroupsOverview />} />
-        <Route path="/chit-create" element={<CreateAllocateGroups onBack={() => window.history.back()} onSave={() => navigateToPage('chit-list')} />} />
-        <Route path="/chit-list" element={<ListOfGroups />} />
-        <Route path="/chit-360" element={<Group360 groupId="1" onBack={() => window.history.back()} />} />
-        <Route path="/chit-reports" element={<ChitReports />} />
-        <Route path="/hrms-directory" element={<EmployeeDirectory />} />
-        <Route path="/hrms-new-employee" element={<NewEmployee onBack={() => window.history.back()} onSave={() => navigateToPage('hrms-directory')} />} />
-        <Route path="/hrms-employee-360" element={<Employee360 employeeId={selectedEmployeeId} onBack={() => window.history.back()} />} />
-        <Route path="/hrms-attendance" element={<AttendanceLogs />} />
-        <Route path="/hrms-payroll" element={<PayrollRuns />} />
-        <Route path="/hrms-reports" element={<HRMSReports />} />
-        <Route path="/reports-dashboard" element={<ReportsDashboard />} />
-        <Route path="/reports-my" element={<MyReports />} />
-        <Route path="/reports-scheduled" element={<ScheduledReports />} />
-        <Route path="/reports-uploads" element={<UploadsImport />} />
-        <Route path="/company-profile-branding" element={<CompanyProfile />} />
-        <Route path="/branches" element={<Branches />} />
-        <Route path="/departments" element={<Departments />} />
-        <Route path="/roles-permissions" element={<RolesPermissions />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/templates" element={<TemplatesDMS />} />
-        <Route path="/audit-logs" element={<AuditLogs />} />
-        <Route path="/members" element={<Members />} />
-        <Route path="/schemes" element={<Schemes />} />
-        <Route path="/payments" element={<Payments />} />
-        
-        {/* Customization - Admin Only */}
-        <Route path="/custom-theme" element={
-          <ProtectedRoute requiredRole="admin">
-            <CustomizationLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<ThemePage />} />
-        </Route>
-        <Route path="/custom-sidebar" element={
-          <ProtectedRoute requiredRole="admin">
-            <CustomizationLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<SidebarPage />} />
-        </Route>
-        <Route path="/custom-modules" element={
-          <ProtectedRoute requiredRole="admin">
-            <CustomizationLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<ModulesPage />} />
-        </Route>
-        <Route path="/custom-forms" element={
-          <ProtectedRoute requiredRole="admin">
-            <CustomizationLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<FormEditorPage />} />
-        </Route>
-        <Route path="/custom-tables" element={
-          <ProtectedRoute requiredRole="admin">
-            <CustomizationLayout />
-          </ProtectedRoute>
-        }>
-          <Route index element={<TableEditorPage />} />
-        </Route>
-        
-        {/* Catch all route */}
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
-      </Routes>
-    </MainLayout>
-  );
-}
-
-function App() {
-  useEffect(() => {
-    // Initialize sample data on first load
-    initializeSampleData();
-  }, []);
-
   return (
     <div className="min-h-screen bg-gray-50">
       <Toaster position="top-right" />
-      <AuthProvider>
-        <AppConfigProvider>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/*" element={<AppContent />} />
-          </Routes>
-        </AppConfigProvider>
-      </AuthProvider>
+      <MainLayout
+        title={pageConfig.title}
+        subtitle={pageConfig.subtitle}
+      >
+        <Routes>
+          {/* Dashboard */}
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={<DashboardHome onPageChange={navigateToPage} />} />
+          
+          {/* All Routes */}
+          <Route path="/leads-all" element={<AllLeads />} />
+          <Route path="/leads-kanban" element={<LeadsKanban />} />
+          <Route path="/leads-new" element={<NewLead onBack={() => window.history.back()} onSave={() => navigateToPage('leads-all')} />} />
+          <Route path="/leads-360" element={<Lead360 leadId="1" onBack={() => window.history.back()} />} />
+          <Route path="/leads-conversions" element={<Conversions />} />
+          <Route path="/leads-orders" element={<OrdersReceipts />} />
+          <Route path="/leads-reports" element={<LeadsReports />} />
+          <Route path="/tasks-my" element={<MyTasks />} />
+          <Route path="/tasks-board" element={<TaskBoard />} />
+          <Route path="/tickets-inbox" element={<TicketsInbox />} />
+          <Route path="/tickets-sla" element={<SLAPriority />} />
+          <Route path="/tasks-reports" element={<TasksReports />} />
+          <Route path="/campaigns-all" element={<Campaigns />} />
+          <Route path="/email-journeys" element={<EmailJourneys />} />
+          <Route path="/chat-broadcast" element={<ChatBroadcast />} />
+          <Route path="/templates" element={<Templates />} />
+          <Route path="/calendar-month" element={<MonthWeekDay />} />
+          <Route path="/calendar-my" element={<MyEvents />} />
+          <Route path="/calendar-team" element={<TeamView />} />
+          <Route path="/subscribers-all" element={<AllSubscribers />} />
+          <Route path="/subscribers-new" element={<NewSubscriber onBack={() => window.history.back()} onSave={() => navigateToPage('subscribers-all')} />} />
+          <Route path="/subscribers-360" element={<Subscriber360 subscriberId="1" onBack={() => window.history.back()} />} />
+          <Route path="/subscribers-reports" element={<SubscribersReports />} />
+          <Route path="/agents-directory" element={<AgentDirectory />} />
+          <Route path="/agents-add" element={<AddAgent onBack={() => window.history.back()} onSave={() => navigateToPage('agents-directory')} />} />
+          <Route path="/agents-targets" element={<TargetsRanking />} />
+          <Route path="/agents-diary" element={<AgentDailyDiary />} />
+          <Route path="/chit-overview" element={<GroupsOverview />} />
+          <Route path="/chit-create" element={<CreateAllocateGroups onBack={() => window.history.back()} onSave={() => navigateToPage('chit-list')} />} />
+          <Route path="/chit-list" element={<ListOfGroups />} />
+          <Route path="/chit-360" element={<Group360 groupId="1" onBack={() => window.history.back()} />} />
+          <Route path="/chit-reports" element={<ChitReports />} />
+          <Route path="/hrms-directory" element={<EmployeeDirectory />} />
+          <Route path="/hrms-new-employee" element={<NewEmployee onBack={() => window.history.back()} onSave={() => navigateToPage('hrms-directory')} />} />
+          <Route path="/hrms-employee-360" element={<Employee360 employeeId={selectedEmployeeId} onBack={() => window.history.back()} />} />
+          <Route path="/hrms-attendance" element={<AttendanceLogs />} />
+          <Route path="/hrms-payroll" element={<PayrollRuns />} />
+          <Route path="/hrms-reports" element={<HRMSReports />} />
+          <Route path="/reports-dashboard" element={<ReportsDashboard />} />
+          <Route path="/reports-my" element={<MyReports />} />
+          <Route path="/reports-scheduled" element={<ScheduledReports />} />
+          <Route path="/reports-uploads" element={<UploadsImport />} />
+          <Route path="/company-profile-branding" element={<CompanyProfile />} />
+          <Route path="/branches" element={<Branches />} />
+          <Route path="/departments" element={<Departments />} />
+          <Route path="/roles-permissions" element={<RolesPermissions />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/templates" element={<TemplatesDMS />} />
+          <Route path="/audit-logs" element={<AuditLogs />} />
+          <Route path="/members" element={<Members />} />
+          <Route path="/schemes" element={<Schemes />} />
+          <Route path="/payments" element={<Payments />} />
+          
+          {/* Customization */}
+          <Route path="/custom-theme" element={<PlaceholderPage title="Theme Customization" description="Customize colors, typography, and visual design elements." />} />
+          <Route path="/custom-sidebar" element={<PlaceholderPage title="Navigation Settings" description="Customize sidebar layout, order, and visibility options." />} />
+          <Route path="/custom-modules" element={<PlaceholderPage title="Module Configuration" description="Enable/disable features and configure module-specific settings." />} />
+          <Route path="/custom-forms" element={<PlaceholderPage title="Form Customization" description="Customize form fields, validation, and conditional logic." />} />
+          
+          {/* Catch all route */}
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </MainLayout>
     </div>
   );
 }
