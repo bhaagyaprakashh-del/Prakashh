@@ -1,29 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  Search,
-  Filter,
-  Plus,
-  Eye,
-  Edit,
-  UserX,
-  Users,
-  Shield,
-  Building,
-  UserCheck,
-  Crown,
-  Star,
-  Award,
-  CheckCircle,
-  XCircle,
-  Clock,
-  Mail,
-  Phone,
-  Calendar,
-  MoreVertical,
-  Download,
-  Upload,
-  Settings
-} from 'lucide-react';
+import { Search, Filter, Plus, Eye, CreditCard as Edit, UserX, Users, Shield, Building, UserCheck, Crown, Star, Award, CheckCircle, XCircle, Clock, Mail, Phone, Calendar, MoreVertical, Download, Upload, Settings } from 'lucide-react';
 import { UserCategory, UserRow, mockUsers, searchUsers } from '../../data/users.mock';
 import toast from 'react-hot-toast';
 
