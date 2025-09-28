@@ -1,43 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  Plus,
-  Search,
-  Edit,
-  Trash2,
-  Eye,
-  Calendar,
-  Clock,
-  MapPin,
-  Phone,
-  Mail,
-  Users,
-  Car,
-  DollarSign,
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  Star,
-  Target,
-  Award,
-  TrendingUp,
-  Activity,
-  Filter,
-  Download,
-  Upload,
-  Settings,
-  MoreVertical,
-  User,
-  Building,
-  Navigation,
-  Smile,
-  Meh,
-  Frown,
-  Battery,
-  ThumbsUp,
-  MessageSquare,
-  FileText,
-  Send
-} from 'lucide-react';
+import { Plus, Search, CreditCard as Edit, Trash2, Eye, Calendar, Clock, MapPin, Phone, Mail, Users, Car, DollarSign, CheckCircle, XCircle, AlertTriangle, Star, Target, Award, TrendingUp, Activity, Filter, Download, Upload, Settings, MoreVertical, User, Building, Navigation, Smile, Meh, Frown, Battery, ThumbsUp, MessageSquare, FileText, Send } from 'lucide-react';
 import { DailyDiary, DiaryActivity } from '../../types/agents';
 
 const sampleDiaries: DailyDiary[] = [
