@@ -220,6 +220,33 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const brandName = config.company?.brandName || 'Ramnirmalchits';
   const companyLogo = config.company?.logoSidebar;
 
+  const isActive = (id: string) => {
+    const currentPath = location.pathname.slice(1);
+    return currentPath === id;
+  };
+
+  const handleItemClick = (item: NavigationItem) => {
+    const { navigateTo } = useActions();
+    navigateTo(`/${item.id}`);
+    handleCloseFlyout();
+  };
+
+  const handleItemHover = (item: NavigationItem, event: React.MouseEvent) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const position = {
+      top: rect.top,
+      left: rect.right + 8
+    };
+    setFlyoutItem(item);
+    setFlyoutPosition(position);
+  };
+
+  const handleItemLeave = () => {
+    setFlyoutItem(null);
+  };
+
+  const location = useLocation();
+
   return (
     <>
       <div className={`bg-slate-900 border-r border-yellow-400/30 transition-all duration-300 flex flex-col h-full ${
@@ -410,79 +437,5 @@ const NavigationItemComponent: React.FC<NavigationItemProps> = ({
         </div>
       )}
     </div>
-  );
-};
-
-  return (
-    <>
-      <div className={`${isCollapsed ? 'w-16' : 'w-80'} bg-slate-900/95 border-r border-yellow-400/30 flex flex-col h-full shadow-xl backdrop-blur-xl transition-all duration-300`}>
-        {/* User Profile Section */}
-        <div className={`${isCollapsed ? 'p-3' : 'p-6'} border-b border-yellow-400/30 transition-all duration-300`}>
-          <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-3'} mb-4`}>
-            <div className="h-12 w-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center border border-yellow-400/40 shadow-lg">
-              <span className="text-slate-50 text-lg font-semibold">P</span>
-            </div>
-            {!isCollapsed && (
-              <div className="transition-opacity duration-300">
-                <h3 className="text-slate-50 font-semibold">Prakashh</h3>
-                <div className="flex items-center space-x-2">
-                  <div className="h-2 w-2 bg-emerald-400 rounded-full shadow-sm"></div>
-                  <span className="text-emerald-400 text-sm">Online</span>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Search */}
-          {!isCollapsed && (
-            <div className="relative transition-opacity duration-300">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500 h-4 w-4" />
-              <input
-                type="text"
-                placeholder="Search modules..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-12 py-2.5 bg-slate-800/60 border border-yellow-400/30 rounded-lg text-sm text-slate-50 placeholder-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full transition-all backdrop-blur-sm"
-              />
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                <kbd className="px-2 py-1 text-xs font-semibold text-slate-300 bg-slate-700/60 border border-yellow-400/30 rounded shadow-sm backdrop-blur-sm">
-                  ⌘K
-                </kbd>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Navigation */}
-        <nav className={`flex-1 ${isCollapsed ? 'p-2' : 'p-4'} space-y-2 overflow-y-auto transition-all duration-300 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-yellow-400/20 hover:scrollbar-thumb-yellow-400/40`}>
-          {filteredNavigation.map((item) => (
-            <SidebarItem
-              key={item.id}
-              item={item}
-              isCollapsed={isCollapsed}
-              onOpenFlyout={handleOpenFlyout}
-            />
-          ))}
-        </nav>
-
-        {/* Footer */}
-        {!isCollapsed && (
-          <div className="p-4 border-t border-yellow-400/30 transition-opacity duration-300">
-            <div className="text-center text-slate-400 text-xs">
-              <p>Ramnirmalchits ERP & CRM</p>
-              <p className="text-slate-500">v2.0.0 - Build 2024.1</p>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Flyout Panel */}
-      <FlyoutPanel
-        item={flyoutItem!}
-        isOpen={!!flyoutItem}
-        onClose={handleCloseFlyout}
-        position={flyoutPosition}
-      />
-    </>
   );
 };
