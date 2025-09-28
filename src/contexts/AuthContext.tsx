@@ -61,10 +61,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const userData: User = {
         id: '1',
         name: 'Prakash',
+        email: 'prakash@ramnirmalchits.com',
           role: 'Admin',
-          permissions: ['all'],
-        role: 'Administrator'
-      } else if (username === 'employee' && password === 'employee') {
+        permissions: ['all']
+      };
+      
+      setUser(userData);
+      localStorage.setItem('auth_user', JSON.stringify(userData));
+      setIsLoading(false);
+      return true;
+    } else if (username === 'employee' && password === 'employee') {
         const user: User = {
           id: '2',
           name: 'Priya Sharma',

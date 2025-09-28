@@ -63,7 +63,7 @@ const CompanyProfile = React.lazy(() => import('../components/Company/CompanyPro
 const Branches = React.lazy(() => import('../components/Company/Branches').then(module => ({ default: module.Branches })));
 const Departments = React.lazy(() => import('../components/Company/Departments').then(module => ({ default: module.Departments })));
 const RolesPermissions = React.lazy(() => import('../components/Company/RolesPermissions').then(module => ({ default: module.RolesPermissions })));
-const UsersComponent = React.lazy(() => import('../components/Company/Users').then(module => ({ default: module.Users })));
+const UsersComponent = React.lazy(() => import('../pages/settings/UsersPage'));
 const Products = React.lazy(() => import('../components/Company/Products').then(module => ({ default: module.Products })));
 const TemplatesDMS = React.lazy(() => import('../components/Company/TemplatesDMS').then(module => ({ default: module.TemplatesDMS })));
 const AuditLogs = React.lazy(() => import('../components/Company/AuditLogs').then(module => ({ default: module.AuditLogs })));
