@@ -1,10 +1,13 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
+export type AppRole = "Admin" | "Employee" | "Agent" | "Subscriber";
+
 interface User {
   id: string;
   name: string;
   email: string;
-  role: string;
+  role: AppRole;
+  permissions: string[];
   avatar?: string;
 }
 
