@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Search, Filter, Plus, Eye, CreditCard as Edit, UserX, Users, Shield, Building, UserCheck, Crown, Star, Award, CheckCircle, XCircle, Clock, Mail, Phone, Calendar, MoreVertical, Download, Upload, Settings } from 'lucide-react';
 import { UserCategory, UserRow, mockUsers, searchUsers } from '../../data/users.mock';
 import toast from 'react-hot-toast';
+import { AddUser } from '../../components/Users/AddUser';
 
 const UserCard: React.FC<{ user: UserRow }> = ({ user }) => {
   const getStatusColor = (status: string) => {
@@ -265,6 +266,7 @@ const UsersPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<'All' | 'Active' | 'Inactive'>('All');
   const [currentPage, setCurrentPage] = useState(1);
+  const [showAddUser, setShowAddUser] = useState(false);
   const itemsPerPage = 12;
 
   const categories: Array<{ id: UserCategory | 'All'; name: string; icon: React.ComponentType<any> }> = [
@@ -313,7 +315,18 @@ const UsersPage: React.FC = () => {
   }), []);
 
   const handleAddUser = () => {
-    toast.success('Opening Add User form');
+    setShowAddUser(true);
+  };
+
+  const handleSaveUser = (userData: any) => {
+    // Here you would typically save to your backend/database
+    console.log('Saving user:', userData);
+    setShowAddUser(false);
+    toast.success(`User ${userData.name} created successfully!`);
+  };
+
+  const handleCancelAddUser = () => {
+    setShowAddUser(false);
   };
 
   const handleExport = () => {
@@ -323,6 +336,16 @@ const UsersPage: React.FC = () => {
   const handleImport = () => {
     toast.success('Opening Import Users dialog');
   };
+
+  // If showing add user form, render it instead of the main page
+  if (showAddUser) {
+    return (
+      <AddUser
+        onBack={handleCancelAddUser}
+        onSave={handleSaveUser}
+      />
+    );
+  }
 
   return (
     <div className="h-full flex flex-col bg-slate-900 overflow-hidden">

@@ -64,6 +64,7 @@ const Branches = React.lazy(() => import('../components/Company/Branches').then(
 const Departments = React.lazy(() => import('../components/Company/Departments').then(module => ({ default: module.Departments })));
 const RolesPermissions = React.lazy(() => import('../components/Company/RolesPermissions').then(module => ({ default: module.RolesPermissions })));
 const UsersComponent = React.lazy(() => import('../pages/settings/UsersPage'));
+const AddUserComponent = React.lazy(() => import('../components/Users/AddUser').then(module => ({ default: module.AddUser })));
 const Products = React.lazy(() => import('../components/Company/Products').then(module => ({ default: module.Products })));
 const TemplatesDMS = React.lazy(() => import('../components/Company/TemplatesDMS').then(module => ({ default: module.TemplatesDMS })));
 const AuditLogs = React.lazy(() => import('../components/Company/AuditLogs').then(module => ({ default: module.AuditLogs })));
@@ -454,6 +455,13 @@ export const routes: AppRoute[] = [
     key: "settings.users", 
     title: "User Management", 
     element: <UsersComponent />, 
+    parent: "settings" 
+  },
+  { 
+    path: "/users/add", 
+    key: "settings.users.add", 
+    title: "Add New User", 
+    element: <AddUserComponent onBack={() => window.history.back()} onSave={() => window.location.href = '/users'} />, 
     parent: "settings" 
   },
   { 
