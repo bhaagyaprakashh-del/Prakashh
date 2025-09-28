@@ -1,7 +1,8 @@
 import { 
   Home, BarChart3, Target, Bell, Users, Kanban, Plus, Eye, TrendingUp, FileText, 
   CheckSquare, Ticket, Clock, MessageSquare, Mail, Calendar, UserCheck, Building, 
-  Award, CreditCard, DollarSign, Upload, Settings, Palette, List, Edit, Shield, Activity
+  Award, CreditCard, DollarSign, Upload, Settings, Palette, List, Edit, Shield, Activity,
+  Database, Zap, ArrowLeftRight, GitMerge, AlertTriangle, FileSearch, Cog
 } from 'lucide-react';
 
 export interface NavigationItem {
@@ -135,6 +136,20 @@ export const navigation: NavigationItem[] = [
       { id: 'products', name: 'Products', icon: CreditCard },
       { id: 'templates', name: 'Templates / DMS', icon: FileText },
       { id: 'audit-logs', name: 'Audit Logs & Error Log', icon: Activity }
+    ]
+  },
+  {
+    id: 'integrate',
+    name: 'Integrate',
+    icon: Database,
+    children: [
+      { id: 'integrate-overview', name: 'Overview', icon: Eye },
+      { id: 'integrate-data-sync', name: 'Data Sync', icon: Zap },
+      { id: 'integrate-field-mappings', name: 'Field Mappings', icon: ArrowLeftRight },
+      { id: 'integrate-update-console', name: 'Update Console', icon: Upload },
+      { id: 'integrate-conflict-resolver', name: 'Conflict Resolver', icon: GitMerge },
+      { id: 'integrate-logs', name: 'Logs', icon: FileSearch },
+      { id: 'integrate-settings', name: 'Settings', icon: Cog }
     ]
   },
   {
