@@ -1,36 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  Plus,
-  Search,
-  Edit,
-  Trash2,
-  Users,
-  Mail,
-  Phone,
-  MapPin,
-  Calendar,
-  Building,
-  User,
-  Eye,
-  MoreVertical,
-  Filter,
-  Download,
-  Upload,
-  UserCheck,
-  Target,
-  Award,
-  TrendingUp,
-  DollarSign,
-  Star,
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  Clock,
-  Briefcase,
-  Car,
-  Bike,
-  Navigation
-} from 'lucide-react';
+import { Plus, Search, CreditCard as Edit, Trash2, Users, Mail, Phone, MapPin, Calendar, Building, User, Eye, MoreVertical, Filter, Download, Upload, UserCheck, Target, Award, TrendingUp, DollarSign, Star, CheckCircle, XCircle, AlertTriangle, Clock, Briefcase, Car, Bike, Navigation } from 'lucide-react';
 import { Agent } from '../../types/agents';
 
 const sampleAgents: Agent[] = [

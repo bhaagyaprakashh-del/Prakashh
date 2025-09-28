@@ -1,28 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  Target,
-  Award,
-  TrendingUp,
-  Users,
-  DollarSign,
-  Calendar,
-  Star,
-  Trophy,
-  Medal,
-  Crown,
-  Zap,
-  Activity,
-  CheckCircle,
-  AlertTriangle,
-  Clock,
-  Filter,
-  Download,
-  RefreshCw,
-  Eye,
-  Edit,
-  Plus,
-  MoreVertical
-} from 'lucide-react';
+import { Target, Award, TrendingUp, Users, DollarSign, Calendar, Star, Trophy, Medal, Crown, Zap, Activity, CheckCircle, AlertTriangle, Clock, Filter, Download, RefreshCw, Eye, CreditCard as Edit, Plus, MoreVertical } from 'lucide-react';
 import { Agent, AgentTarget, AgentRanking } from '../../types/agents';
 
 const sampleTargets: AgentTarget[] = [
