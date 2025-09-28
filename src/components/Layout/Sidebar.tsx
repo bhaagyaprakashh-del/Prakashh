@@ -226,7 +226,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Navigation */}
-        <nav className={`flex-1 ${isCollapsed ? 'p-2' : 'p-4'} space-y-2 overflow-y-auto transition-all duration-300`}>
+        <nav className={`flex-1 ${isCollapsed ? 'p-2' : 'p-4'} space-y-2 overflow-y-auto transition-all duration-300 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-yellow-400/20 hover:scrollbar-thumb-yellow-400/40`}>
           {filteredNavigation.map((item) => (
             <SidebarItem
               key={item.id}
