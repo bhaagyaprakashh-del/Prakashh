@@ -1,33 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  Plus,
-  Search,
-  Calendar,
-  Clock,
-  MapPin,
-  Phone,
-  Mail,
-  Users,
-  Car,
-  DollarSign,
-  TrendingUp,
-  Activity,
-  CheckCircle,
-  Eye,
-  Edit,
-  Save,
-  Filter,
-  Download,
-  Upload,
-  Star,
-  Target,
-  Award,
-  Zap,
-  MoreVertical,
-  Smile,
-  Meh,
-  Frown
-} from 'lucide-react';
+import { Plus, Search, Calendar, Clock, MapPin, Phone, Mail, Users, Car, DollarSign, TrendingUp, Activity, CheckCircle, Eye, CreditCard as Edit, Save, Filter, Download, Upload, Star, Target, Award, Zap, MoreVertical, Smile, Meh, Frown } from 'lucide-react';
 import { DailyDiary, DiaryActivity } from '../../types/agents';
 
 const sampleDiaries: DailyDiary[] = [
