@@ -38,7 +38,7 @@ const SubscribersReports = React.lazy(() => import('../components/Subscribers/Su
 const AgentDirectory = React.lazy(() => import('../components/Agents/AgentDirectory').then(module => ({ default: module.AgentDirectory })));
 const AddAgent = React.lazy(() => import('../components/Agents/AddAgent').then(module => ({ default: module.AddAgent })));
 const TargetsRanking = React.lazy(() => import('../components/Agents/TargetsRanking').then(module => ({ default: module.TargetsRanking })));
-const AgentDailyDiary = React.lazy(() => import('../components/Agents/DailyDiary').then(module => ({ default: module.DailyDiary })));
+const AgentDailyDiary = React.lazy(() => import('../components/Agents/DailyDiary').then(module => ({ default: module.default })));
 const GroupsOverview = React.lazy(() => import('../components/ChitFund/GroupsOverview').then(module => ({ default: module.GroupsOverview })));
 const CreateAllocateGroups = React.lazy(() => import('../components/ChitFund/CreateAllocateGroups').then(module => ({ default: module.CreateAllocateGroups })));
 const ListOfGroups = React.lazy(() => import('../components/ChitFund/ListOfGroups').then(module => ({ default: module.ListOfGroups })));
@@ -58,7 +58,7 @@ const CompanyProfile = React.lazy(() => import('../components/Company/CompanyPro
 const Branches = React.lazy(() => import('../components/Company/Branches').then(module => ({ default: module.Branches })));
 const Departments = React.lazy(() => import('../components/Company/Departments').then(module => ({ default: module.Departments })));
 const RolesPermissions = React.lazy(() => import('../components/Company/RolesPermissions').then(module => ({ default: module.RolesPermissions })));
-const Users = React.lazy(() => import('../components/Company/Users').then(module => ({ default: module.Users })));
+const UsersComponent = React.lazy(() => import('../components/Company/Users').then(module => ({ default: module.Users })));
 const Products = React.lazy(() => import('../components/Company/Products').then(module => ({ default: module.Products })));
 const TemplatesDMS = React.lazy(() => import('../components/Company/TemplatesDMS').then(module => ({ default: module.TemplatesDMS })));
 const AuditLogs = React.lazy(() => import('../components/Company/AuditLogs').then(module => ({ default: module.AuditLogs })));
@@ -435,7 +435,7 @@ export const routes: AppRoute[] = [
     path: "/users", 
     key: "settings.users", 
     title: "User Management", 
-    element: <Users />, 
+    element: <UsersComponent />, 
     parent: "settings" 
   },
   { 

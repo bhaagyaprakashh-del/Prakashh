@@ -27,11 +27,6 @@ function App() {
   useEffect(() => {
     // Initialize sample data on first load
     initializeSampleData();
-    
-    // Run route audit in development
-    if (process.env.NODE_ENV === 'development') {
-      auditRoutes();
-    }
   }, []);
 
   const getPageTitle = (path: string) => {
