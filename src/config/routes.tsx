@@ -62,9 +62,9 @@ const UsersComponent = React.lazy(() => import('../components/Company/Users').th
 const Products = React.lazy(() => import('../components/Company/Products').then(module => ({ default: module.Products })));
 const TemplatesDMS = React.lazy(() => import('../components/Company/TemplatesDMS').then(module => ({ default: module.TemplatesDMS })));
 const AuditLogs = React.lazy(() => import('../components/Company/AuditLogs').then(module => ({ default: module.AuditLogs })));
-const Members = React.lazy(() => import('../components/Members').then(module => ({ default: module.Members })));
-const Schemes = React.lazy(() => import('../components/Schemes').then(module => ({ default: module.Schemes })));
-const Payments = React.lazy(() => import('../components/Payments').then(module => ({ default: module.Payments })));
+const LegacyMembers = React.lazy(() => import('../components/Members').then(module => ({ default: module.Members })));
+const LegacySchemes = React.lazy(() => import('../components/Schemes').then(module => ({ default: module.Schemes })));
+const LegacyPayments = React.lazy(() => import('../components/Payments').then(module => ({ default: module.Payments })));
 
 // Stub components for missing pages
 const PlaceholderPage: React.FC<{ title: string; description: string }> = ({ title, description }) => (
@@ -435,7 +435,7 @@ export const routes: AppRoute[] = [
     path: "/users", 
     key: "settings.users", 
     title: "User Management", 
-    element: <UsersComponent />, 
+    element: React.createElement(UsersComponent), 
     parent: "settings" 
   },
   { 
@@ -465,21 +465,21 @@ export const routes: AppRoute[] = [
     path: "/members", 
     key: "legacy.members", 
     title: "Members", 
-    element: <Members />, 
+    element: React.createElement(LegacyMembers), 
     parent: "legacy" 
   },
   { 
     path: "/schemes", 
     key: "legacy.schemes", 
     title: "Schemes", 
-    element: <Schemes />, 
+    element: React.createElement(LegacySchemes), 
     parent: "legacy" 
   },
   { 
     path: "/payments", 
     key: "legacy.payments", 
     title: "Payments", 
-    element: <Payments />, 
+    element: React.createElement(LegacyPayments), 
     parent: "legacy" 
   },
 
