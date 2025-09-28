@@ -20,6 +20,7 @@ export const navigation: NavigationItem[] = [
     children: [
       { id: 'leads-all', name: 'All Leads (Table)', icon: List },
       { id: 'leads-kanban', name: 'Kanban View', icon: Kanban },
+      { id: 'leads/kanban', name: 'Kanban Board', icon: Kanban },
       { id: 'leads-new', name: 'New Lead', icon: Plus },
       { id: 'leads-360', name: 'Lead 360', icon: Eye },
       { id: 'leads-conversions', name: 'Conversions', icon: TrendingUp },

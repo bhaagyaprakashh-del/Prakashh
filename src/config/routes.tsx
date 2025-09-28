@@ -19,6 +19,7 @@ export type AppRoute = {
 const DashboardHome = React.lazy(() => import('../components/Dashboard/DashboardHome').then(module => ({ default: module.DashboardHome })));
 const AllLeads = React.lazy(() => import('../components/CRM/AllLeads').then(module => ({ default: module.AllLeads })));
 const LeadsKanban = React.lazy(() => import('../components/CRM/LeadsKanban').then(module => ({ default: module.LeadsKanban })));
+const LeadsKanbanBoard = React.lazy(() => import('../pages/Leads/LeadsKanban').then(module => ({ default: module.LeadsKanban })));
 const NewLead = React.lazy(() => import('../components/CRM/NewLead').then(module => ({ default: module.NewLead })));
 const Lead360 = React.lazy(() => import('../components/CRM/Lead360').then(module => ({ default: module.Lead360 })));
 const Conversions = React.lazy(() => import('../components/CRM/Conversions').then(module => ({ default: module.Conversions })));
@@ -114,7 +115,7 @@ export const routes: AppRoute[] = [
     path: "/leads-kanban", 
     key: "leads.kanban", 
     title: "Leads Pipeline (Kanban)", 
-    element: <LeadsKanban />, 
+    element: <LeadsKanbanBoard />, 
     parent: "leads" 
   },
   { 
