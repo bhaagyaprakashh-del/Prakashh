@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Search, ChevronRight } from 'lucide-react';
 import { NavigationItem, navigation } from '../../config/navigation';
 import { getRouteByPath } from '../../config/routes';
+import { useAuth, AppRole } from '../../contexts/AuthContext';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -15,6 +16,51 @@ interface FlyoutPanelProps {
   onClose: () => void;
   position: { top: number; left: number };
 }
+
+const getVisibleNavigation = (role: AppRole, permissions: string[]): NavigationItem[] => {
+  const filteredNav = navigation.filter(item => {
+    // Admin sees everything
+    if (role === 'Admin') return true;
+    
+    // Filter based on role
+    switch (role) {
+      case 'Employee':
+        return !['company-settings'].includes(item.id) || 
+               (item.id === 'company-settings' && item.children?.some(child => 
+                 !['roles-permissions', 'system-settings'].includes(child.id)
+               ));
+      case 'Agent':
+        return ['leads', 'meetings', 'calls', 'visits'].some(allowed => 
+          item.id.includes(allowed) || item.children?.some(child => child.id.includes(allowed))
+        );
+      case 'Subscriber':
+        return ['profile', 'chits', 'payments', 'support'].some(allowed => 
+          item.id.includes(allowed) || item.children?.some(child => child.id.includes(allowed))
+        );
+      default:
+        return false;
+    }
+  });
+
+  // Filter children based on permissions
+  return filteredNav.map(item => ({
+    ...item,
+    children: item.children?.filter(child => {
+      if (role === 'Admin') return true;
+      
+      switch (role) {
+        case 'Employee':
+          return !['roles-permissions', 'system-settings'].includes(child.id);
+        case 'Agent':
+          return ['leads', 'meetings', 'calls', 'visits'].some(allowed => child.id.includes(allowed));
+        case 'Subscriber':
+          return ['profile', 'chits', 'payments', 'support'].some(allowed => child.id.includes(allowed));
+        default:
+          return false;
+      }
+    })
+  }));
+};
 
 const FlyoutPanel: React.FC<FlyoutPanelProps> = ({ item, isOpen, onClose, position }) => {
   const navigate = useNavigate();
@@ -167,9 +213,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   isCollapsed,
   onToggleCollapsed
 }) => {
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [flyoutItem, setFlyoutItem] = useState<NavigationItem | null>(null);
   const [flyoutPosition, setFlyoutPosition] = useState({ top: 0, left: 0 });
+
+  const visibleNavigation = user ? getVisibleNavigation(user.role, user.permissions) : navigation;
 
   const handleOpenFlyout = (item: NavigationItem, position: { top: number; left: number }) => {
     setFlyoutItem(item);
@@ -180,7 +229,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     setFlyoutItem(null);
   };
 
-  const filteredNavigation = navigation.filter(item =>
+  const filteredNavigation = visibleNavigation.filter(item =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
