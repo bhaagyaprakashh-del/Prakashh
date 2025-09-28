@@ -1,29 +1,5 @@
 import React, { useState } from 'react';
-import {
-  ArrowLeft,
-  Edit,
-  Mail,
-  Phone,
-  MapPin,
-  Calendar,
-  Building,
-  User,
-  CreditCard,
-  FileText,
-  Clock,
-  Award,
-  Target,
-  TrendingUp,
-  Users,
-  CheckCircle,
-  AlertTriangle,
-  Download,
-  Upload,
-  Star,
-  DollarSign,
-  Shield,
-  Activity
-} from 'lucide-react';
+import { ArrowLeft, CreditCard as Edit, Mail, Phone, MapPin, Calendar, Building, User, CreditCard, FileText, Clock, Award, Target, TrendingUp, Users, CheckCircle, AlertTriangle, Download, Upload, Star, DollarSign, Shield, Activity } from 'lucide-react';
 import { Subscriber, SubscriberActivity, SubscriberScheme } from '../../types/subscribers';
 
 interface Subscriber360Props {
