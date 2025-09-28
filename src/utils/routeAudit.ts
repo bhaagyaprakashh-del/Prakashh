@@ -18,14 +18,10 @@ export const auditRoutes = (): RouteAuditResult => {
   
   // Check all routes have valid components
   routes.forEach(route => {
-    try {
-      if (route.element) {
-        validRoutes.push(`✅ ${route.path} → ${route.title}`);
-      } else {
-        missingRoutes.push(`❌ ${route.path} → Missing component`);
-      }
-    } catch (error) {
-      missingRoutes.push(`⚠️ ${route.path} → Component error: ${error}`);
+    if (route.element !== null && route.element !== undefined) {
+      validRoutes.push(`✅ ${route.path} → ${route.title}`);
+    } else {
+      missingRoutes.push(`❌ ${route.path} → Missing component`);
     }
   });
 
