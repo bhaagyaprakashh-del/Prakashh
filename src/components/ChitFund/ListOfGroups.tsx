@@ -1,31 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  Plus,
-  Search,
-  Edit,
-  Trash2,
-  Eye,
-  Users,
-  Calendar,
-  DollarSign,
-  TrendingUp,
-  Building,
-  CreditCard,
-  CheckCircle,
-  Clock,
-  AlertTriangle,
-  Star,
-  Target,
-  Award,
-  Activity,
-  Filter,
-  Download,
-  Upload,
-  MoreVertical,
-  Gavel,
-  Receipt,
-  UserCheck
-} from 'lucide-react';
+import { Plus, Search, CreditCard as Edit, Trash2, Eye, Users, Calendar, DollarSign, TrendingUp, Building, CreditCard, CheckCircle, Clock, AlertTriangle, Star, Target, Award, Activity, Filter, Download, Upload, MoreVertical, Gavel, Receipt, UserCheck } from 'lucide-react';
 import { ChitGroup } from '../../types/chit';
 
 const sampleGroups: ChitGroup[] = [

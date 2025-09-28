@@ -1,29 +1,5 @@
 import React, { useState } from 'react';
-import {
-  ArrowLeft,
-  Edit,
-  Users,
-  Calendar,
-  DollarSign,
-  CreditCard,
-  Gavel,
-  Receipt,
-  FileText,
-  Clock,
-  Award,
-  Target,
-  TrendingUp,
-  CheckCircle,
-  AlertTriangle,
-  Download,
-  Upload,
-  Star,
-  Activity,
-  Building,
-  Phone,
-  Mail,
-  MapPin
-} from 'lucide-react';
+import { ArrowLeft, CreditCard as Edit, Users, Calendar, DollarSign, CreditCard, Gavel, Receipt, FileText, Clock, Award, Target, TrendingUp, CheckCircle, AlertTriangle, Download, Upload, Star, Activity, Building, Phone, Mail, MapPin } from 'lucide-react';
 import { ChitGroup, ChitMember, ChitAuction } from '../../types/chit';
 
 interface Group360Props {
