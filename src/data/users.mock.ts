@@ -258,3 +258,24 @@ export const searchUsers = (query: string, category?: UserCategory): UserRow[] =
     user.role?.toLowerCase().includes(searchTerm)
   );
 };
+
+// Add user to the mock data
+export const addUser = (userData: UserRow): void => {
+  mockUsers.push(userData);
+};
+
+// Update user in the mock data
+export const updateUser = (updatedUser: UserRow): void => {
+  const index = mockUsers.findIndex(user => user.id === updatedUser.id);
+  if (index !== -1) {
+    mockUsers[index] = updatedUser;
+  }
+};
+
+// Delete user from the mock data
+export const deleteUser = (userId: string): void => {
+  const index = mockUsers.findIndex(user => user.id === userId);
+  if (index !== -1) {
+    mockUsers.splice(index, 1);
+  }
+};

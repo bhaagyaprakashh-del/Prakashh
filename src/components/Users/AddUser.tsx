@@ -181,7 +181,7 @@ export const AddUser: React.FC<AddUserProps> = ({ onBack, onSave }) => {
         department: formData.department,
         branch: formData.branch,
         joiningDate: formData.joiningDate,
-        lastLogin: null,
+        lastLogin: undefined,
         ...formData
       };
       

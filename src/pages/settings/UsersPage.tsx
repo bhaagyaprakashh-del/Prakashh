@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Search, Filter, Plus, Eye, CreditCard as Edit, UserX, Users, Shield, Building, UserCheck, Crown, Star, Award, CheckCircle, XCircle, Clock, Mail, Phone, Calendar, MoreVertical, Download, Upload, Settings } from 'lucide-react';
-import { UserCategory, UserRow, mockUsers, searchUsers } from '../../data/users.mock';
+import { UserCategory, UserRow, mockUsers, searchUsers, addUser, updateUser, deleteUser } from '../../data/users.mock';
 import toast from 'react-hot-toast';
 import { AddUser } from '../../components/Users/AddUser';
 
@@ -166,6 +166,18 @@ const UserTable: React.FC<{ users: UserRow[] }> = ({ users }) => {
   };
 
   const handleDisable = (user: UserRow) => {
+    const updatedUser = {
+      ...user,
+      status: user.status === 'Active' ? 'Inactive' as const : 'Active' as const
+    };
+    updateUser(updatedUser);
+    setRefreshKey(prev => prev + 1); // Force re-render
+    toast.success(`${user.status === 'Active' ? 'Disabled' : 'Enabled'} ${user.name}`);
+      ...user,
+      status: user.status === 'Active' ? 'Inactive' as const : 'Active' as const
+    };
+    updateUser(updatedUser);
+    setRefreshKey(prev => prev + 1); // Force re-render
     toast.success(`${user.status === 'Active' ? 'Disabled' : 'Enabled'} ${user.name}`);
   };
 
@@ -267,6 +279,7 @@ const UsersPage: React.FC = () => {
   const [filterStatus, setFilterStatus] = useState<'All' | 'Active' | 'Inactive'>('All');
   const [currentPage, setCurrentPage] = useState(1);
   const [showAddUser, setShowAddUser] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
   const itemsPerPage = 12;
 
   const categories: Array<{ id: UserCategory | 'All'; name: string; icon: React.ComponentType<any> }> = [
@@ -312,15 +325,30 @@ const UsersPage: React.FC = () => {
     employees: mockUsers.filter(u => u.category === 'Employees').length,
     agents: mockUsers.filter(u => u.category === 'Agents').length,
     subscribers: mockUsers.filter(u => u.category === 'Subscribers').length
-  }), []);
+  }), [refreshKey]); // Add refreshKey dependency to recalculate stats
 
   const handleAddUser = () => {
     setShowAddUser(true);
   };
 
   const handleSaveUser = (userData: any) => {
-    // Here you would typically save to your backend/database
-    console.log('Saving user:', userData);
+    // Add the new user to the mock data
+    const newUser: UserRow = {
+      id: userData.id || `user_${Date.now()}`,
+      name: userData.name,
+      email: userData.email,
+      phone: userData.phone,
+      category: userData.category,
+      role: userData.role,
+      status: userData.status,
+      lastLogin: null,
+      department: userData.department,
+      branch: userData.branch,
+      joiningDate: userData.joiningDate
+    };
+    
+    addUser(newUser);
+    setRefreshKey(prev => prev + 1); // Force re-render to show new user
     setShowAddUser(false);
     toast.success(`User ${userData.name} created successfully!`);
   };
