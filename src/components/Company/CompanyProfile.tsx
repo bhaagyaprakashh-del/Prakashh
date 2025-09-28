@@ -218,6 +218,19 @@ export const CompanyProfile: React.FC = () => {
     setIsSaving(true);
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Save branding data to localStorage for login page
+    const brandingData = {
+      companyName: formData.companyName,
+      brandName: formData.brandName,
+      tagline: formData.tagline,
+      primaryColor: formData.primaryColor,
+      secondaryColor: formData.secondaryColor,
+      accentColor: formData.accentColor,
+      logoLogin: formData.logoLogin ? URL.createObjectURL(formData.logoLogin) : null
+    };
+    localStorage.setItem('company_branding', JSON.stringify(brandingData));
+    
     setIsSaving(false);
     // Show success message
   };

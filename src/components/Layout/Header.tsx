@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Bell, User, Menu, Upload, LogOut, ChevronDown, Clock, X, CheckCircle, AlertTriangle, Info, Settings, HelpCircle } from 'lucide-react';
 import { navigation } from '../../config/navigation';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface HeaderProps {
   title: string;
@@ -185,6 +186,8 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ isOpen, onC
 };
 
 const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ isOpen, onClose }) => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [avatar, setAvatar] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -200,8 +203,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ isOpen, onClose }) =>
   };
 
   const handleLogout = () => {
-    // Implement logout logic here
-    console.log('Logging out...');
+    navigate('/logout');
     onClose();
   };
 
@@ -244,9 +246,9 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ isOpen, onClose }) =>
               />
             </div>
             <div>
-              <h3 className="text-slate-50 font-semibold text-lg">Prakashh</h3>
-              <p className="text-slate-300 text-sm">Administrator</p>
-              <p className="text-slate-400 text-xs">prakashh@ramnirmalchits.com</p>
+              <h3 className="text-slate-50 font-semibold text-lg">{user?.name || 'User'}</h3>
+              <p className="text-slate-300 text-sm">{user?.role || 'Role'}</p>
+              <p className="text-slate-400 text-xs">{user?.email || 'email@example.com'}</p>
             </div>
           </div>
         </div>

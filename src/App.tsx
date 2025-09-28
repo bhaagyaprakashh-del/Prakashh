@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { AuthProvider } from './contexts/AuthContext';
+import { ProtectedRoute } from './components/Auth/ProtectedRoute';
+import { LoginPage } from './components/Auth/LoginPage';
+import { LogoutPage } from './components/Auth/LogoutPage';
 import { MainLayout } from './components/Layout/MainLayout';
 import { DashboardHome } from './components/Dashboard/DashboardHome';
 import { LeadsKanban } from './components/CRM/LeadsKanban';
@@ -169,83 +173,96 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Toaster position="top-right" />
-      <MainLayout
-        title={pageConfig.title}
-        subtitle={pageConfig.subtitle}
-      >
+    <AuthProvider>
+      <div className="min-h-screen bg-gray-50">
+        <Toaster position="top-right" />
         <Routes>
-          {/* Dashboard */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/dashboard" element={<DashboardHome onPageChange={navigateToPage} />} />
+          {/* Public Routes */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/logout" element={<LogoutPage />} />
           
-          {/* All Routes */}
-          <Route path="/leads-all" element={<AllLeads />} />
-          <Route path="/leads-kanban" element={<LeadsKanban />} />
-          <Route path="/leads-new" element={<NewLead onBack={() => window.history.back()} onSave={() => navigateToPage('leads-all')} />} />
-          <Route path="/leads-360" element={<Lead360 leadId="1" onBack={() => window.history.back()} />} />
-          <Route path="/leads-conversions" element={<Conversions />} />
-          <Route path="/leads-orders" element={<OrdersReceipts />} />
-          <Route path="/leads-reports" element={<LeadsReports />} />
-          <Route path="/tasks-my" element={<MyTasks />} />
-          <Route path="/tasks-board" element={<TaskBoard />} />
-          <Route path="/tickets-inbox" element={<TicketsInbox />} />
-          <Route path="/tickets-sla" element={<SLAPriority />} />
-          <Route path="/tasks-reports" element={<TasksReports />} />
-          <Route path="/campaigns-all" element={<Campaigns />} />
-          <Route path="/email-journeys" element={<EmailJourneys />} />
-          <Route path="/chat-broadcast" element={<ChatBroadcast />} />
-          <Route path="/templates" element={<Templates />} />
-          <Route path="/calendar-month" element={<MonthWeekDay />} />
-          <Route path="/calendar-my" element={<MyEvents />} />
-          <Route path="/calendar-team" element={<TeamView />} />
-          <Route path="/subscribers-all" element={<AllSubscribers />} />
-          <Route path="/subscribers-new" element={<NewSubscriber onBack={() => window.history.back()} onSave={() => navigateToPage('subscribers-all')} />} />
-          <Route path="/subscribers-360" element={<Subscriber360 subscriberId="1" onBack={() => window.history.back()} />} />
-          <Route path="/subscribers-reports" element={<SubscribersReports />} />
-          <Route path="/agents-directory" element={<AgentDirectory />} />
-          <Route path="/agents-add" element={<AddAgent onBack={() => window.history.back()} onSave={() => navigateToPage('agents-directory')} />} />
-          <Route path="/agents-targets" element={<TargetsRanking />} />
-          <Route path="/agents-diary" element={<AgentDailyDiary />} />
-          <Route path="/chit-overview" element={<GroupsOverview />} />
-          <Route path="/chit-create" element={<CreateAllocateGroups onBack={() => window.history.back()} onSave={() => navigateToPage('chit-list')} />} />
-          <Route path="/chit-list" element={<ListOfGroups />} />
-          <Route path="/chit-360" element={<Group360 groupId="1" onBack={() => window.history.back()} />} />
-          <Route path="/chit-reports" element={<ChitReports />} />
-          <Route path="/hrms-directory" element={<EmployeeDirectory />} />
-          <Route path="/hrms-new-employee" element={<NewEmployee onBack={() => window.history.back()} onSave={() => navigateToPage('hrms-directory')} />} />
-          <Route path="/hrms-employee-360" element={<Employee360 employeeId={selectedEmployeeId} onBack={() => window.history.back()} />} />
-          <Route path="/hrms-attendance" element={<AttendanceLogs />} />
-          <Route path="/hrms-payroll" element={<PayrollRuns />} />
-          <Route path="/hrms-reports" element={<HRMSReports />} />
-          <Route path="/reports-dashboard" element={<ReportsDashboard />} />
-          <Route path="/reports-my" element={<MyReports />} />
-          <Route path="/reports-scheduled" element={<ScheduledReports />} />
-          <Route path="/reports-uploads" element={<UploadsImport />} />
-          <Route path="/company-profile-branding" element={<CompanyProfile />} />
-          <Route path="/branches" element={<Branches />} />
-          <Route path="/departments" element={<Departments />} />
-          <Route path="/roles-permissions" element={<RolesPermissions />} />
-          <Route path="/users" element={<Users />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/templates" element={<TemplatesDMS />} />
-          <Route path="/audit-logs" element={<AuditLogs />} />
-          <Route path="/members" element={<Members />} />
-          <Route path="/schemes" element={<Schemes />} />
-          <Route path="/payments" element={<Payments />} />
-          
-          {/* Customization */}
-          <Route path="/custom-theme" element={<PlaceholderPage title="Theme Customization" description="Customize colors, typography, and visual design elements." />} />
-          <Route path="/custom-sidebar" element={<PlaceholderPage title="Navigation Settings" description="Customize sidebar layout, order, and visibility options." />} />
-          <Route path="/custom-modules" element={<PlaceholderPage title="Module Configuration" description="Enable/disable features and configure module-specific settings." />} />
-          <Route path="/custom-forms" element={<PlaceholderPage title="Form Customization" description="Customize form fields, validation, and conditional logic." />} />
-          
-          {/* Catch all route */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          {/* Protected Routes */}
+          <Route path="/*" element={
+            <ProtectedRoute>
+              <MainLayout
+                title={pageConfig.title}
+                subtitle={pageConfig.subtitle}
+              >
+                <Routes>
+                  {/* Dashboard */}
+                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                  <Route path="/dashboard" element={<DashboardHome onPageChange={navigateToPage} />} />
+                  
+                  {/* All Routes */}
+                  <Route path="/leads-all" element={<AllLeads />} />
+                  <Route path="/leads-kanban" element={<LeadsKanban />} />
+                  <Route path="/leads-new" element={<NewLead onBack={() => window.history.back()} onSave={() => navigateToPage('leads-all')} />} />
+                  <Route path="/leads-360" element={<Lead360 leadId="1" onBack={() => window.history.back()} />} />
+                  <Route path="/leads-conversions" element={<Conversions />} />
+                  <Route path="/leads-orders" element={<OrdersReceipts />} />
+                  <Route path="/leads-reports" element={<LeadsReports />} />
+                  <Route path="/tasks-my" element={<MyTasks />} />
+                  <Route path="/tasks-board" element={<TaskBoard />} />
+                  <Route path="/tickets-inbox" element={<TicketsInbox />} />
+                  <Route path="/tickets-sla" element={<SLAPriority />} />
+                  <Route path="/tasks-reports" element={<TasksReports />} />
+                  <Route path="/campaigns-all" element={<Campaigns />} />
+                  <Route path="/email-journeys" element={<EmailJourneys />} />
+                  <Route path="/chat-broadcast" element={<ChatBroadcast />} />
+                  <Route path="/templates" element={<Templates />} />
+                  <Route path="/calendar-month" element={<MonthWeekDay />} />
+                  <Route path="/calendar-my" element={<MyEvents />} />
+                  <Route path="/calendar-team" element={<TeamView />} />
+                  <Route path="/subscribers-all" element={<AllSubscribers />} />
+                  <Route path="/subscribers-new" element={<NewSubscriber onBack={() => window.history.back()} onSave={() => navigateToPage('subscribers-all')} />} />
+                  <Route path="/subscribers-360" element={<Subscriber360 subscriberId="1" onBack={() => window.history.back()} />} />
+                  <Route path="/subscribers-reports" element={<SubscribersReports />} />
+                  <Route path="/agents-directory" element={<AgentDirectory />} />
+                  <Route path="/agents-add" element={<AddAgent onBack={() => window.history.back()} onSave={() => navigateToPage('agents-directory')} />} />
+                  <Route path="/agents-targets" element={<TargetsRanking />} />
+                  <Route path="/agents-diary" element={<AgentDailyDiary />} />
+                  <Route path="/chit-overview" element={<GroupsOverview />} />
+                  <Route path="/chit-create" element={<CreateAllocateGroups onBack={() => window.history.back()} onSave={() => navigateToPage('chit-list')} />} />
+                  <Route path="/chit-list" element={<ListOfGroups />} />
+                  <Route path="/chit-360" element={<Group360 groupId="1" onBack={() => window.history.back()} />} />
+                  <Route path="/chit-reports" element={<ChitReports />} />
+                  <Route path="/hrms-directory" element={<EmployeeDirectory />} />
+                  <Route path="/hrms-new-employee" element={<NewEmployee onBack={() => window.history.back()} onSave={() => navigateToPage('hrms-directory')} />} />
+                  <Route path="/hrms-employee-360" element={<Employee360 employeeId={selectedEmployeeId} onBack={() => window.history.back()} />} />
+                  <Route path="/hrms-attendance" element={<AttendanceLogs />} />
+                  <Route path="/hrms-payroll" element={<PayrollRuns />} />
+                  <Route path="/hrms-reports" element={<HRMSReports />} />
+                  <Route path="/reports-dashboard" element={<ReportsDashboard />} />
+                  <Route path="/reports-my" element={<MyReports />} />
+                  <Route path="/reports-scheduled" element={<ScheduledReports />} />
+                  <Route path="/reports-uploads" element={<UploadsImport />} />
+                  <Route path="/company-profile-branding" element={<CompanyProfile />} />
+                  <Route path="/branches" element={<Branches />} />
+                  <Route path="/departments" element={<Departments />} />
+                  <Route path="/roles-permissions" element={<RolesPermissions />} />
+                  <Route path="/users" element={<Users />} />
+                  <Route path="/products" element={<Products />} />
+                  <Route path="/templates" element={<TemplatesDMS />} />
+                  <Route path="/audit-logs" element={<AuditLogs />} />
+                  <Route path="/members" element={<Members />} />
+                  <Route path="/schemes" element={<Schemes />} />
+                  <Route path="/payments" element={<Payments />} />
+                  
+                  {/* Customization */}
+                  <Route path="/custom-theme" element={<PlaceholderPage title="Theme Customization" description="Customize colors, typography, and visual design elements." />} />
+                  <Route path="/custom-sidebar" element={<PlaceholderPage title="Navigation Settings" description="Customize sidebar layout, order, and visibility options." />} />
+                  <Route path="/custom-modules" element={<PlaceholderPage title="Module Configuration" description="Enable/disable features and configure module-specific settings." />} />
+                  <Route path="/custom-forms" element={<PlaceholderPage title="Form Customization" description="Customize form fields, validation, and conditional logic." />} />
+                  
+                  {/* Catch all route */}
+                  <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                </Routes>
+              </MainLayout>
+            </ProtectedRoute>
+          } />
         </Routes>
-      </MainLayout>
-    </div>
+      </div>
+    </AuthProvider>
   );
 }
 
