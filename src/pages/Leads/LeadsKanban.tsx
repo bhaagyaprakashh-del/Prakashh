@@ -19,25 +19,7 @@ import {
   sortableKeyboardCoordinates
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import {
-  Plus,
-  Search,
-  Filter,
-  MoreVertical,
-  GripVertical,
-  User,
-  Building,
-  Calendar,
-  DollarSign,
-  Tag,
-  Eye,
-  Edit,
-  Phone,
-  Mail,
-  Settings,
-  Download,
-  RefreshCw
-} from 'lucide-react';
+import { Plus, Search, Filter, MoreVertical, GripVertical, User, Building, Calendar, DollarSign, Tag, Eye, CreditCard as Edit, Phone, Mail, Settings, Download, RefreshCw } from 'lucide-react';
 import { GlassyColumn, GlassyCard } from '../../components/ui/Glassy';
 import { useLeadsKanban } from './useLeadsKanban';
 import { Lead, ColumnId } from '../../types/leads';
