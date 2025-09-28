@@ -1,4 +1,9 @@
 import React from 'react';
+import { Navigate } from 'react-router-dom';
+import AdminDashboard from '../pages/dashboards/AdminDashboard';
+import EmployeeDashboard from '../pages/dashboards/EmployeeDashboard';
+import AgentDashboard from '../pages/dashboards/AgentDashboard';
+import SubscriberDashboard from '../pages/dashboards/SubscriberDashboard';
 
 export type AppRoute = {
   path: string;                    // e.g., "/settings/users"
@@ -89,6 +94,12 @@ export const routes: AppRoute[] = [
     element: <DashboardHome onPageChange={(page: string) => window.location.href = `/${page}`} />, 
     parent: "dashboard" 
   },
+
+  // Role-based Dashboards
+  { path: "/dash/admin", key: "dash.admin", title: "Admin Dashboard", element: <AdminDashboard /> },
+  { path: "/dash/employee", key: "dash.employee", title: "Employee Dashboard", element: <EmployeeDashboard /> },
+  { path: "/dash/agent", key: "dash.agent", title: "Agent Dashboard", element: <AgentDashboard /> },
+  { path: "/dash/subscriber", key: "dash.subscriber", title: "Subscriber Dashboard", element: <SubscriberDashboard /> },
 
   // Leads & Sales
   { 
@@ -429,6 +440,13 @@ export const routes: AppRoute[] = [
     key: "settings.roles", 
     title: "Roles & Permissions", 
     element: <RolesPermissions />, 
+    parent: "settings" 
+  },
+  { 
+    path: "/settings/users", 
+    key: "settings.users", 
+    title: "Users", 
+    element: <UsersComponent />, 
     parent: "settings" 
   },
   { 

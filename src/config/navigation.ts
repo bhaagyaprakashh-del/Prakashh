@@ -126,8 +126,8 @@ export const navigation: NavigationItem[] = [
       { id: 'company-profile-branding', name: 'Company Profile & Branding', icon: Building },
       { id: 'branches', name: 'Branches', icon: Building },
       { id: 'departments', name: 'Departments', icon: Users },
+      { id: 'users', name: 'Users', icon: Users },
       { id: 'roles-permissions', name: 'Roles & Permissions', icon: Shield },
-      { id: 'users', name: 'Users', icon: UserCheck },
       { id: 'products', name: 'Products', icon: CreditCard },
       { id: 'templates-dms', name: 'Templates / DMS', icon: FileText },
       { id: 'audit-logs', name: 'Audit Logs & Error Log', icon: Activity }

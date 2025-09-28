@@ -61,8 +61,45 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const userData: User = {
         id: '1',
         name: 'Prakash',
-        email: 'prakash@ramnirmalchits.com',
+          role: 'Admin',
+          permissions: ['all'],
         role: 'Administrator'
+      } else if (username === 'employee' && password === 'employee') {
+        const user: User = {
+          id: '2',
+          name: 'Priya Sharma',
+          email: 'priya.sharma@ramnirmalchits.com',
+          role: 'Employee',
+          permissions: ['tasks', 'reports', 'calendar'],
+          avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+        };
+        setUser(user);
+        localStorage.setItem('user', JSON.stringify(user));
+        return true;
+      } else if (username === 'agent' && password === 'agent') {
+        const user: User = {
+          id: '3',
+          name: 'Vikram Singh',
+          email: 'vikram.singh@agents.ramnirmalchits.com',
+          role: 'Agent',
+          permissions: ['leads', 'meetings', 'calls', 'visits'],
+          avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+        };
+        setUser(user);
+        localStorage.setItem('user', JSON.stringify(user));
+        return true;
+      } else if (username === 'subscriber' && password === 'subscriber') {
+        const user: User = {
+          id: '4',
+          name: 'Anita Desai',
+          email: 'anita.desai@subscribers.ramnirmalchits.com',
+          role: 'Subscriber',
+          permissions: ['profile', 'chits', 'payments', 'support'],
+          avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+        };
+        setUser(user);
+        localStorage.setItem('user', JSON.stringify(user));
+        return true;
       };
       
       setUser(userData);
