@@ -6,7 +6,7 @@ import { ProtectedRoute } from './components/Auth/ProtectedRoute';
 import { LoginPage } from './components/Auth/LoginPage';
 import { LogoutPage } from './components/Auth/LogoutPage';
 import { MainLayout } from './components/Layout/MainLayout';
-import { routes, auditRoutes } from './config/routes';
+import { routes, auditRoutes } from './config/routes.tsx';
 import { initializeSampleData } from './utils/storage';
 
 // Not Found Redirect Component

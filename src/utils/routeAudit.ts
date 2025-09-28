@@ -1,4 +1,4 @@
-import { routes } from '../config/routes';
+import { routes } from '../config/routes.tsx';
 import { navigation } from '../config/navigation';
 
 export interface RouteAuditResult {
