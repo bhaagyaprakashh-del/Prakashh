@@ -1,7 +1,18 @@
-# Bolt / local metadata
-.bolt/
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# More build outputs
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
 build/
 .next/
 .nuxt/
@@ -13,12 +24,29 @@ coverage/
 .parcel-cache/
 .turbo/
 .cache/
+.eslintcache
+.stylelintcache
 
-# Logs & runtime
-logs/
-*.log
+# Editor/OS
+.vscode/
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.sw?
+.suo
+*.ntvs*
+*.njsproj
+*.sln
 
-# Heavy/local assets (don’t version; store externally)
+# Env
+.env
+.env.*.local
+
+# Heavy/local assets (keep out of Git; serve from storage/CDN)
 public/uploads/
 uploads/
 storage/
+
+# Bolt metadata (don’t version)
+.bolt/
