@@ -1,59 +1,32 @@
-# Logs
-logs/
+# === Node / Vite / React ===
+node_modules/
+dist/
+build/
+.vite/
+.turbo/
+.parcel-cache/
+.cache/
+coverage/
 *.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-# Dependencies
-node_modules/
-
-# Build outputs
-dist/
-dist-ssr/
-build/
-.next/
-.nuxt/
-.out/
-coverage/
-storybook-static/
-
-# Tool caches
-.vite/
-.parcel-cache/
-.turbo/
-.cache/
-.eslintcache
-.stylelintcache
-
-# Test artifacts
-cypress/videos/
-cypress/screenshots/
-playwright-report/
-test-results/
-
-# Editor/OS
-.vscode/
-!.vscode/extensions.json
-.idea/
+# === Tooling / OS ===
 .DS_Store
 Thumbs.db
-*.sw?
+.idea/
+.vscode/
 
-# Env
-.env
-.env.*.local
+# === Python (if /api present) ===
+__pycache__/
+*.pyc
+.python-version
+.venv/
+env/
+venv/
+.mypy_cache/
+.pytest_cache/
 
-# Heavy/local assets (don’t version—use object storage/CDN)
-public/uploads/
-uploads/
-storage/
-
-# Bolt metadata
-.bolt/
-
-# Temp
-tmp/
-temp/
+# === Frontend artifacts ===
+*.map
