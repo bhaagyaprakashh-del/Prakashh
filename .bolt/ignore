@@ -1,13 +1,53 @@
-node_modules/
-dist/
-build/
-out/
-.next/
-.turbo/
-.cache/
-.vite/
-coverage/
-.DS_Store
+# Build & caches
+node_modules/*
+dist/*
+build/*
+out/*
+.next/*
+.turbo/*
+.cache/*
+.vite/*
+coverage/*
+
+# Maps & generated assets
+public/assets/*
+public/*.map
+
+# Logs, TS cache
 *.log
+*.tsbuildinfo
+eslintcache
+
+# IDE/OS
+.vscode/*
+.idea/*
+.DS_Store
+Thumbs.db
+
+# Env
 .env
 .env.*
+
+# Tests & stories (optional)
+__tests__/*
+tests/*
+test/*
+.storybook/*
+
+# Large binaries anywhere (optional—keep if AI must see images)
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.gif
+**/*.webp
+**/*.svg
+**/*.mp4
+**/*.mov
+**/*.zip
+**/*.pdf
+**/*.pptx
+**/*.xlsx
+**/*.csv
+
+# Data dumps (adjust as needed)
+data/*
