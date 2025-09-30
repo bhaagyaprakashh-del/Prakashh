@@ -1,9 +1,7 @@
-# create/update .gitignore
-cat > .gitignore << 'EOF'
-# Node & package managers
+# Node / package managers
 node_modules/
-.pnp.cjs
 .pnpm-store/
+.pnp.cjs
 .npm/
 .yarn/
 .yarn/cache/
@@ -25,17 +23,18 @@ coverage/
 *.seed
 *.tsbuildinfo
 eslintcache
+
+# IDE / OS
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
 
-# Local env & secrets (never commit)
+# Env (keep only example)
 .env
 .env.*
 !.env.example
 
-# Bolt & tooling artifacts (if any)
+# Bolt artifacts (if any)
 .bolt/tmp/
 .bolt/cache/
-EOF
